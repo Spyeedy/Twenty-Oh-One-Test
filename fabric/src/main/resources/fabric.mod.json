@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "id": "${mod_id}",
+  "version": "${version}",
+  "name": "Spyeedy's Twenty Oh One Test",
+  "description": "This is an example description! Tell everyone what your mod is about!",
+  "authors": [
+    "Spyeedy"
+  ],
+  "contact": {
+    "homepage": "https://fabricmc.net/",
+    "sources": "https://github.com/FabricMC/fabric-example-mod"
+  },
+  "license": "CC0-1.0",
+  "icon": "assets/${mod_id}/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "spyeedy.mods.spytwenohone.fabric.SpyTwentyOhOneFabric"
+    ],
+    "client": [
+      "spyeedy.mods.spytwenohone.fabric.client.SpyTwentyOhOneFabricClient"
+    ]
+  },
+  "mixins": [
+    "spytwenohone.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.15.11",
+    "minecraft": "~1.20.1",
+    "java": ">=17",
+    "fabric-api": "*"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
+}
