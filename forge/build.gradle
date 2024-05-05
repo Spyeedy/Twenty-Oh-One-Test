@@ -7,6 +7,18 @@ architectury {
     forge()
 }
 
+loom {
+    runConfigs.configureEach {
+        if (name == "client") {
+            runDir = "../common/run"
+
+            if(System.getenv('MC_USERNAME') && System.getenv('MC_UUID') && System.getenv('MC_ACCESS_TOKEN')) {
+                programArgs '--username', System.getenv('MC_USERNAME'), '--uuid', System.getenv('MC_UUID'), '--accessToken', System.getenv('MC_ACCESS_TOKEN')
+            }
+        }
+    }
+}
+
 configurations {
     common {
         canBeResolved = true
