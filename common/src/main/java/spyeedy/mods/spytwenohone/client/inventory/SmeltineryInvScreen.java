@@ -24,5 +24,12 @@ public class SmeltineryInvScreen extends AbstractContainerScreen<SmeltineryConta
 		int i = (this.width - this.imageWidth) / 2;
 		int j = (this.height - this.imageHeight) / 2;
 		guiGraphics.blit(GUI_TEX, i, j, 0, 0, this.imageWidth, this.imageHeight);
+
+		if (!this.menu.getSlot(2).hasItem()) {
+			guiGraphics.blit(GUI_TEX, i + 84, j + 19, imageWidth, 31, 16, 16);
+		}
+
+		// Progress
+//		guiGraphics.blit(GUI_TEX, i + 109, j + 18, imageWidth, 14, (int) (24 * 0.5f), 17);
 	}
 }
