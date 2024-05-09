@@ -21,12 +21,14 @@ public class SpyTwentyOhOneClient {
 		if (Platform.isModLoaded(ModIdRefs.KubeJS)) {
 			 ReloadListenerRegistry.register(PackType.CLIENT_RESOURCES, new ResourceLocation(SpyTwentyOhOne.MOD_ID, "scriptable_screens"), ScriptableScreenManager.INSTANCE);
 		}
-
-		RenderTypeRegistry.registerBlock(RenderType.cutout(), SpyTooBlocks.SMELT_FINERY);
 	}
 
 	public static void registerMenuScreens() {
 		MenuScreens.register(SpyTooContainers.SMELTINERY.get(), SmeltineryInvScreen::new);
+	}
+
+	public static void registerRenderTypes() {
+		RenderTypeRegistry.registerBlock(SpyTooBlocks.SMELT_FINERY, RenderType.cutout());
 	}
 
 	public static void keyPress(Minecraft minecraft, int key, int scanCode, int action, int modifiers) {

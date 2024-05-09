@@ -4,7 +4,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
-import spyeedy.mods.spytwenohone.SpyTwentyOhOne;
 import spyeedy.mods.spytwenohone.container.SmeltineryContainer;
 
 public class SmeltineryInvScreen extends AbstractContainerScreen<SmeltineryContainer> {
@@ -15,7 +14,6 @@ public class SmeltineryInvScreen extends AbstractContainerScreen<SmeltineryConta
 
 	@Override
 	protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
-		SpyTwentyOhOne.LOGGER.info("Rendering");
 	}
 
 	@Override
