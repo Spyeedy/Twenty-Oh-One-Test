@@ -2,12 +2,18 @@ package spyeedy.mods.spytwenohone;
 
 import com.mojang.logging.LogUtils;
 import org.slf4j.Logger;
+import spyeedy.mods.spytwenohone.block.SpyTooBlocks;
+import spyeedy.mods.spytwenohone.block.entity.SpyTooBlockEntities;
+import spyeedy.mods.spytwenohone.item.SpyTooItems;
 
 public final class SpyTwentyOhOne {
-    public static final String MOD_ID = "spytoo";
+	public static final String MOD_ID = "spytoo";
 
-    public static final Logger LOGGER = LogUtils.getLogger();
+	public static final Logger LOGGER = LogUtils.getLogger();
 
-    public static void init() {
-    }
+	public static void init() {
+		SpyTooBlocks.BLOCKS.submit();
+		SpyTooItems.ITEMS.submit();
+		SpyTooBlockEntities.BLOCK_ENTITY_TYPES.submit();
+	}
 }
