@@ -12,5 +12,7 @@ public final class SpyTwentyOhOneFabricClient implements ClientModInitializer {
 		SpyTwentyOhOneClient.init();
 
 		RenderTypeRegistry.getBlocks().forEach(renderTypeBlock -> BlockRenderLayerMap.INSTANCE.putBlock(renderTypeBlock.getSecond().get(), renderTypeBlock.getFirst()));
+
+		SpyTwentyOhOneClient.registerMenuScreens();
 	}
 }

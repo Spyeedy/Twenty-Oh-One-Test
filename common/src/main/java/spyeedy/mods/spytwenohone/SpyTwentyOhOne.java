@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import org.slf4j.Logger;
 import spyeedy.mods.spytwenohone.block.SpyTooBlocks;
 import spyeedy.mods.spytwenohone.block.entity.SpyTooBlockEntities;
+import spyeedy.mods.spytwenohone.container.SpyTooContainers;
 import spyeedy.mods.spytwenohone.item.SpyTooItems;
 
 public final class SpyTwentyOhOne {
@@ -15,5 +16,6 @@ public final class SpyTwentyOhOne {
 		SpyTooBlocks.BLOCKS.submit();
 		SpyTooItems.ITEMS.submit();
 		SpyTooBlockEntities.BLOCK_ENTITY_TYPES.submit();
+		SpyTooContainers.MENU_TYPES.submit();
 	}
 }

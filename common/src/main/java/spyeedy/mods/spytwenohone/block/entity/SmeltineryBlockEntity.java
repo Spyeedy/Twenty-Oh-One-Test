@@ -12,6 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
+import spyeedy.mods.spytwenohone.container.SmeltineryContainer;
 
 public class SmeltineryBlockEntity extends BlockEntity implements Container, MenuProvider {
 
@@ -69,6 +70,6 @@ public class SmeltineryBlockEntity extends BlockEntity implements Container, Men
 	@Nullable
 	@Override
 	public AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
-		return null;
+		return new SmeltineryContainer(i, inventory);
 	}
 }

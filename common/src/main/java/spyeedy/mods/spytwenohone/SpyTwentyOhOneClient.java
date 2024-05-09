@@ -2,12 +2,15 @@ package spyeedy.mods.spytwenohone;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import spyeedy.mods.spytwenohone.block.SpyTooBlocks;
 import spyeedy.mods.spytwenohone.client.ScriptableScreenManager;
+import spyeedy.mods.spytwenohone.client.inventory.SmeltineryInvScreen;
+import spyeedy.mods.spytwenohone.container.SpyTooContainers;
 import spyeedy.mods.spytwenohone.registry.ReloadListenerRegistry;
 import spyeedy.mods.spytwenohone.registry.client.RenderTypeRegistry;
 import spyeedy.mods.spytwenohone.util.ModIdRefs;
@@ -20,6 +23,10 @@ public class SpyTwentyOhOneClient {
 		}
 
 		RenderTypeRegistry.registerBlock(RenderType.cutout(), SpyTooBlocks.SMELT_FINERY);
+	}
+
+	public static void registerMenuScreens() {
+		MenuScreens.register(SpyTooContainers.SMELTINERY.get(), SmeltineryInvScreen::new);
 	}
 
 	public static void keyPress(Minecraft minecraft, int key, int scanCode, int action, int modifiers) {

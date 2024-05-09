@@ -5,7 +5,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import spyeedy.mods.spytwenohone.SpyTwentyOhOne;
@@ -36,6 +35,9 @@ public class SpyTwentyOhOneForge {
 	public static class ModClientEvents {
 		@SubscribeEvent
 		public static void clientSetup(FMLClientSetupEvent event) {
+			event.enqueueWork(() -> {
+				SpyTwentyOhOneClient.registerMenuScreens();
+			});
 			RenderTypeRegistry.getBlocks().forEach(renderTypeBlock -> ItemBlockRenderTypes.setRenderLayer(renderTypeBlock.getSecond().get(), renderTypeBlock.getFirst()));
 		}
 	}

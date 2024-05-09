@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
@@ -38,7 +39,7 @@ public class SmeltineryBlock extends Block implements EntityBlock {
 		if (!level.isClientSide) {
 			var blockEntity = level.getBlockEntity(pos);
 			if (blockEntity instanceof SmeltineryBlockEntity) {
-//				player.openMenu((MenuProvider) blockEntity);
+				player.openMenu((MenuProvider) blockEntity);
 				SpyTwentyOhOne.LOGGER.info("Success opening!");
 				return InteractionResult.SUCCESS;
 			}
