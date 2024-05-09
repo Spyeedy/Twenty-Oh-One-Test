@@ -5,6 +5,8 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -16,19 +18,23 @@ public class SmeltineryContainer extends AbstractContainerMenu {
 	private Level level;
 	private final Inventory playerInv;
 	private final Container container;
+	private final ContainerData containerData;
 
 	// Client-side constructor. Client gets an empty inventory and the container menu will update the client with the actual data
 	public SmeltineryContainer(int containerId, Inventory playerInv) {
-		this(containerId, playerInv, new SimpleContainer(SmeltineryBlockEntity.SLOTS));
+		this(containerId, playerInv, new SimpleContainer(SmeltineryBlockEntity.SLOTS), new SimpleContainerData(SmeltineryBlockEntity.DATA_COUNT));
 	}
 
 	// Server-side constructor, used by the block entity
-	public SmeltineryContainer(int containerId, Inventory playerInv, Container container) {
+	public SmeltineryContainer(int containerId, Inventory playerInv, Container container, ContainerData containerData) {
 		super(SpyTooContainers.SMELTINERY.get(), containerId);
 
 		this.level = playerInv.player.level();
 		this.playerInv = playerInv;
+		checkContainerSize(container, SmeltineryBlockEntity.SLOTS);
+		checkContainerDataCount(containerData, SmeltineryBlockEntity.DATA_COUNT);
 		this.container = container;
+		this.containerData = containerData;
 
 		// Water slot
 		this.addSlot(new Slot(container, SmeltineryBlockEntity.SLOT_FLUID, 8, 60) {
@@ -42,7 +48,7 @@ public class SmeltineryContainer extends AbstractContainerMenu {
 		this.addSlot(new Slot(container, SmeltineryBlockEntity.SLOT_FUEL, 84, 60) {
 			@Override
 			public boolean mayPlace(ItemStack stack) {
-				return stack.getItem() == Items.COAL || stack.getItem() == Items.CHARCOAL;
+				return SmeltineryBlockEntity.isFuel(stack);
 			}
 		});
 
@@ -73,6 +79,8 @@ public class SmeltineryContainer extends AbstractContainerMenu {
 		for(int x = 0; x < 9; ++x) {
 			this.addSlot(new Slot(playerInv, x, 8 + x * 18, 142));
 		}
+
+		this.addDataSlots(containerData);
 	}
 
 	@Override

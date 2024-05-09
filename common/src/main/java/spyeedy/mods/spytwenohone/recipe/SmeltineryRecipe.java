@@ -8,14 +8,13 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
-import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import spyeedy.mods.spytwenohone.block.entity.SmeltineryBlockEntity;
 import spyeedy.mods.spytwenohone.util.IngredientUtils;
 
-public class SmeltineryRecipe implements Recipe<Container> {
+public class SmeltineryRecipe implements Recipe<SmeltineryBlockEntity> {
 
 	private final ResourceLocation id;
 	private final NonNullList<Ingredient> materials;
@@ -42,20 +41,42 @@ public class SmeltineryRecipe implements Recipe<Container> {
 	}
 
 	@Override
-	public boolean matches(Container container, Level level) {
+	public boolean matches(SmeltineryBlockEntity container, Level level) {
 		if (!metal.test(container.getItem(SmeltineryBlockEntity.SLOT_METAL))) return false;
 
-		for (int i = 0; i < materials.size(); i++) {
-			if (!materials.get(i).test(container.getItem(SmeltineryBlockEntity.SLOT_MATERIAL_START + i)))
-				return false;
+		int matIdx = 0;
+		for (int slotIdx = SmeltineryBlockEntity.SLOT_MATERIAL_START; slotIdx < SmeltineryBlockEntity.SLOT_RESULT && matIdx < materials.size(); slotIdx++) {
+			ItemStack slotItem = container.getItem(slotIdx);
+			if (!slotItem.isEmpty()) {
+				if (!IngredientUtils.testStackDetails(materials.get(matIdx++), slotItem)) {
+					return false;
+				}
+			}
 		}
 
-		return true;
+		return matIdx >= materials.size();
 	}
 
 	@Override
-	public ItemStack assemble(Container container, RegistryAccess registryAccess) {
+	public ItemStack assemble(SmeltineryBlockEntity container, RegistryAccess registryAccess) {
 		return this.getResultItem(registryAccess).copy();
+	}
+
+	public void consumeInputs(SmeltineryBlockEntity container, Level level) {
+		if (!level.isClientSide) {
+			IngredientUtils.shrinkStack(metal, container.getItem(SmeltineryBlockEntity.SLOT_METAL));
+
+			int matIdx = 0;
+			for (int slotIdx = SmeltineryBlockEntity.SLOT_MATERIAL_START; slotIdx < SmeltineryBlockEntity.SLOT_RESULT; slotIdx++) {
+				ItemStack slotItem = container.getItem(slotIdx);
+				if (!slotItem.isEmpty()) {
+					Ingredient matIngredient = materials.get(matIdx++);
+					if (IngredientUtils.testStackDetails(matIngredient, slotItem)) {
+						IngredientUtils.shrinkStack(matIngredient, slotItem);
+					}
+				}
+			}
+		}
 	}
 
 	@Override
