@@ -6,6 +6,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import spyeedy.mods.spytwenohone.SpyTwentyOhOne;
+import spyeedy.mods.spytwenohone.block.entity.SmeltineryBlockEntity;
 import spyeedy.mods.spytwenohone.container.SmeltineryContainer;
 
 public class SmeltineryInvScreen extends AbstractContainerScreen<SmeltineryContainer> {
@@ -25,11 +26,16 @@ public class SmeltineryInvScreen extends AbstractContainerScreen<SmeltineryConta
 		int j = (this.height - this.imageHeight) / 2;
 		guiGraphics.blit(GUI_TEX, i, j, 0, 0, this.imageWidth, this.imageHeight);
 
-		if (!this.menu.getSlot(2).hasItem()) {
+		if (!this.menu.getSlot(SmeltineryBlockEntity.SLOT_METAL).hasItem()) {
 			guiGraphics.blit(GUI_TEX, i + 84, j + 19, imageWidth, 31, 16, 16);
 		}
 
+		if (this.menu.isLit()) {
+			int litProg = menu.getLitProgress();
+			guiGraphics.blit(GUI_TEX, i + 84, j + 55 - litProg, imageWidth, 12 - litProg, 14, litProg + 1);
+		}
+
 		// Progress
-//		guiGraphics.blit(GUI_TEX, i + 109, j + 18, imageWidth, 14, (int) (24 * 0.5f), 17);
+		guiGraphics.blit(GUI_TEX, i + 109, j + 18, imageWidth, 14, menu.getProgress() + 1, 17);
 	}
 }

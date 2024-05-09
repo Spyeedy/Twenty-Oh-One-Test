@@ -2,7 +2,7 @@ package spyeedy.mods.spytwenohone.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
+import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
@@ -25,10 +25,6 @@ import org.jetbrains.annotations.Nullable;
 import spyeedy.mods.spytwenohone.SpyTwentyOhOne;
 import spyeedy.mods.spytwenohone.block.entity.SmeltineryBlockEntity;
 import spyeedy.mods.spytwenohone.block.entity.SpyTooBlockEntities;
-import spyeedy.mods.spytwenohone.recipe.SmeltineryRecipe;
-import spyeedy.mods.spytwenohone.recipe.SpyTooRecipes;
-
-import java.util.Optional;
 
 public class SmeltineryBlock extends BaseEntityBlock {
 
@@ -51,16 +47,15 @@ public class SmeltineryBlock extends BaseEntityBlock {
 	@Override
 	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
 		if (!level.isClientSide) {
-			var blockEntity = level.getBlockEntity(pos);
+			BlockEntity blockEntity = level.getBlockEntity(pos);
 			if (blockEntity instanceof SmeltineryBlockEntity) {
 				SmeltineryBlockEntity be = (SmeltineryBlockEntity) blockEntity;
 				if (player.isCrouching()) {
-					Optional<SmeltineryRecipe> recipeMatch = level.getRecipeManager().getRecipeFor(SpyTooRecipes.SMELTINERY_RECIPE.get(), be, level);
+					/*Optional<SmeltineryRecipe> recipeMatch = level.getRecipeManager().getRecipeFor(SpyTooRecipes.SMELTINERY_RECIPE.get(), be, level);
 					if (recipeMatch.isPresent()) {
 						player.sendSystemMessage(Component.literal("Recipe matched!"));
-//						recipeMatch.get().consumeInputs(be, level);
 						return InteractionResult.SUCCESS;
-					}
+					}*/
 				} else {
 					player.openMenu((MenuProvider) blockEntity);
 					SpyTwentyOhOne.LOGGER.info("Success opening!");
@@ -71,6 +66,20 @@ public class SmeltineryBlock extends BaseEntityBlock {
 		} else {
 			return InteractionResult.SUCCESS;
 		}
+	}
+
+	@Override
+	public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+		if (!state.is(newState.getBlock())) {
+			BlockEntity blockEntity = level.getBlockEntity(pos);
+			if (blockEntity instanceof SmeltineryBlockEntity) {
+				SmeltineryBlockEntity be = (SmeltineryBlockEntity) blockEntity;
+				if (!level.isClientSide) {
+					Containers.dropContents(level, pos, be);
+				}
+			}
+		}
+		super.onRemove(state, level, pos, newState, movedByPiston);
 	}
 
 	@Override

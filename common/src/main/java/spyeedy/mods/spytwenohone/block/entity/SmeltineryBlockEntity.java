@@ -20,7 +20,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
-import spyeedy.mods.spytwenohone.SpyTwentyOhOne;
 import spyeedy.mods.spytwenohone.block.SmeltineryBlock;
 import spyeedy.mods.spytwenohone.container.SmeltineryContainer;
 import spyeedy.mods.spytwenohone.recipe.SmeltineryRecipe;
@@ -35,13 +34,14 @@ public class SmeltineryBlockEntity extends BlockEntity implements Container, Men
 	public static final int SLOT_MATERIAL_START = 3;
 	public static final int SLOT_RESULT = SLOTS - 1;
 	public static final int MAX_MATERIALS = SLOT_RESULT - SLOT_MATERIAL_START;
-	public static final int DATA_COUNT = 2;
+	public static final int DATA_COUNT = 3;
 
-	private static final int MAX_LIT = 100;
+	public static final int MAX_LIT = 8000;
 
 	private NonNullList<ItemStack> inventory = NonNullList.withSize(SLOTS, ItemStack.EMPTY);
 	private int litTime;
 	private int progress;
+	private int maxProgress;
 	protected final ContainerData dataAccess;
 	private final RecipeManager.CachedCheck<SmeltineryBlockEntity, SmeltineryRecipe> quickCheck;
 
@@ -56,7 +56,8 @@ public class SmeltineryBlockEntity extends BlockEntity implements Container, Men
 			public int get(int index) {
 				return switch (index) {
 					case 0 -> progress;
-					case 1 -> litTime;
+					case 1 -> maxProgress;
+					case 2 -> litTime;
 					default -> 0;
 				};
 			}
@@ -68,6 +69,9 @@ public class SmeltineryBlockEntity extends BlockEntity implements Container, Men
 						progress = value;
 						break;
 					case 1:
+						maxProgress = value;
+						break;
+					case 2:
 						litTime = value;
 						break;
 				}
@@ -219,20 +223,19 @@ public class SmeltineryBlockEntity extends BlockEntity implements Container, Men
 			--blockEntity.litTime;
 		}
 
-		SpyTwentyOhOne.LOGGER.info("Smeltinery ticking");
-
 		ItemStack fuelStack = blockEntity.inventory.get(SLOT_FUEL);
 		// if it's lit or if not lit must have fuel & the recipe items
 		if (blockEntity.isLit() || !fuelStack.isEmpty() && !blockEntity.isRecipeSlotsEmpty()) {
-//			SpyTwentyOhOne.LOGGER.info("Smeltinery may cook");
 
 			SmeltineryRecipe recipe = null;
 			if (!blockEntity.isRecipeSlotsEmpty()) {
 				recipe = blockEntity.quickCheck.getRecipeFor(blockEntity, level).orElse(null);
 			}
 
-			if (recipe != null)
-				SpyTwentyOhOne.LOGGER.info("Smeltinery has a recipe!");
+			if (recipe != null) {
+//				SpyTwentyOhOne.LOGGER.info("Smeltinery has a recipe!");
+				blockEntity.maxProgress = recipe.getProcessTime();
+			}
 
 			if (canCook(level.registryAccess(), recipe, blockEntity)) {
 				if (!blockEntity.isLit()) { // if not lit AND can cook
@@ -250,9 +253,14 @@ public class SmeltineryBlockEntity extends BlockEntity implements Container, Men
 				}
 			} else {
 				blockEntity.progress = 0;
+				blockEntity.maxProgress = 0;
 			}
-		} else if (!blockEntity.isLit() && blockEntity.progress > 0)
+		} else if (!blockEntity.isLit() && blockEntity.progress > 0) {
 			blockEntity.progress = Mth.clamp(blockEntity.progress - 2, 0, blockEntity.progress);
+			if (blockEntity.progress == 0) {
+				blockEntity.maxProgress = 0;
+			}
+		}
 
 		// if the old lit state doesn't match current lit state, we set the blockstate!
 		if (oldIsLit != blockEntity.isLit()) {
@@ -263,5 +271,9 @@ public class SmeltineryBlockEntity extends BlockEntity implements Container, Men
 
 		if (shouldUpdate)
 			setChanged(level, pos, state);
+	}
+
+	public enum DataValues {
+		PROGRESS, MAX_PROGRESS, LIT_TIME;
 	}
 }

@@ -85,31 +85,56 @@ public class SmeltineryContainer extends AbstractContainerMenu {
 
 	@Override
 	public ItemStack quickMoveStack(Player player, int index) {
-		ItemStack remainingStack = ItemStack.EMPTY;
+		ItemStack quickMovedStack = ItemStack.EMPTY;
 		Slot slot = this.slots.get(index);
 
 		if (slot != null && slot.hasItem()) {
-			ItemStack movingStack = slot.getItem();
-			remainingStack = movingStack;
+			ItemStack rawStack = slot.getItem();
+			quickMovedStack = rawStack.copy();
 
-			if (!movingStack.isEmpty()) {
+			if (!rawStack.isEmpty()) {
 				if (index < this.container.getContainerSize()) { // move from block's container into player's inventory
-					if (!this.moveItemStackTo(movingStack, this.container.getContainerSize(), this.container.getContainerSize() + 36, true)) {
+					if (!this.moveItemStackTo(rawStack, this.container.getContainerSize(), this.container.getContainerSize() + 36, true)) {
 						return ItemStack.EMPTY;
 					}
-				} else if (!this.moveItemStackTo(movingStack, 0, this.container.getContainerSize(), false)) { // move from player's inventory into block's container
+				} else if (!this.moveItemStackTo(rawStack, 0, this.container.getContainerSize(), false)) { // move from player's inventory into block's container
 					return ItemStack.EMPTY;
 				}
 			}
 
-			slot.onTake(player, movingStack);
+			if (rawStack.isEmpty()) {
+				slot.setByPlayer(ItemStack.EMPTY);
+			} else {
+				slot.setChanged();
+			}
+
+			if (rawStack.getCount() == quickMovedStack.getCount()) {
+				return ItemStack.EMPTY;
+			}
+
+			slot.onTake(player, rawStack);
 		}
 
-		return remainingStack;
+		return quickMovedStack;
 	}
 
 	@Override
 	public boolean stillValid(Player player) {
 		return this.container.stillValid(player);
+	}
+
+	public int getProgress() {
+		int i = this.containerData.get(SmeltineryBlockEntity.DataValues.PROGRESS.ordinal());
+		int j = this.containerData.get(SmeltineryBlockEntity.DataValues.MAX_PROGRESS.ordinal());
+
+		return j > 0 && i > 0 ? i * 24 / j : 0;
+	}
+
+	public int getLitProgress() {
+		return this.containerData.get(SmeltineryBlockEntity.DataValues.LIT_TIME.ordinal()) * 13 / SmeltineryBlockEntity.MAX_LIT;
+	}
+
+	public boolean isLit() {
+		return this.containerData.get(SmeltineryBlockEntity.DataValues.LIT_TIME.ordinal()) > 0;
 	}
 }
