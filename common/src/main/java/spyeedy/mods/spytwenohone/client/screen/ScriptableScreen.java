@@ -1,11 +1,13 @@
 package spyeedy.mods.spytwenohone.client.screen;
 
 public interface ScriptableScreen {
-    void closeScreen();
+	void closeScreen();
 
-    void addWidget();
-    void removeWidget();
+	void addWidget();
 
-    int getScreenWidth();
-    int getScreenHeight();
+	void removeWidget();
+
+	int getScreenWidth();
+
+	int getScreenHeight();
 }

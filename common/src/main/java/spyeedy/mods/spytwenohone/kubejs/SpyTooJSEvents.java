@@ -2,10 +2,9 @@ package spyeedy.mods.spytwenohone.kubejs;
 
 import dev.latvian.mods.kubejs.event.EventGroup;
 import dev.latvian.mods.kubejs.event.EventHandler;
-import spyeedy.mods.spytwenohone.kubejs.event.RegisterScreenEventJS;
 
 public interface SpyTooJSEvents {
-    EventGroup GROUP = EventGroup.of("SpyTooEvents");
+	EventGroup GROUP = EventGroup.of("SpyTooEvents");
 
-    EventHandler REGISTER_SCREENS = GROUP.client("registerScreens", () -> RegisterScreenEventJS.class);
+	EventHandler REGISTER_SCREENS = GROUP.client("registerScreens", () -> RegisterScreenEventJS.class);
 }
