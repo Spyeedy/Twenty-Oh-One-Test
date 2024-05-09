@@ -3,7 +3,16 @@
 	"materials": [
 		{
 			"tag": "minecraft:stone_tool_materials"
-		}
+		},
+		[
+			{
+				"item": "minecraft:diamond",
+				"count": 2
+			},
+			{
+				"tag": "minecraft:stone_tool_materials"
+			}
+		]
 	],
 	"metal": {
 		"item": "minecraft:iron_ingot"

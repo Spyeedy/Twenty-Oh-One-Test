@@ -1,0 +1,19 @@
+{
+	"type": "spytoo:smeltinery",
+	"materials": [
+		{
+			"item": "minecraft:iron_ingot"
+		},
+		{
+			"tag": "minecraft:stone_tool_materials"
+		}
+	],
+	"metal": {
+		"item": "minecraft:diamond"
+	},
+	"result": {
+		"item": "minecraft:diamond",
+		"count": 3
+	},
+	"process_time": 1200
+}

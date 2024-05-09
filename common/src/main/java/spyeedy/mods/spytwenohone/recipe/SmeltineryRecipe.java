@@ -13,6 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import spyeedy.mods.spytwenohone.block.entity.SmeltineryBlockEntity;
+import spyeedy.mods.spytwenohone.util.IngredientUtils;
 
 public class SmeltineryRecipe implements Recipe<Container> {
 
@@ -20,12 +21,24 @@ public class SmeltineryRecipe implements Recipe<Container> {
 	private final NonNullList<Ingredient> materials;
 	private final Ingredient metal;
 	private final ItemStack result;
+	private final float experience;
+	private final int processTime;
 
-	public SmeltineryRecipe(ResourceLocation id, NonNullList<Ingredient> materials, Ingredient metal, ItemStack result) {
+	public SmeltineryRecipe(ResourceLocation id, NonNullList<Ingredient> materials, Ingredient metal, ItemStack result, float experience, int processTime) {
 		this.id = id;
 		this.materials = materials;
 		this.metal = metal;
 		this.result = result;
+		this.experience = experience;
+		this.processTime = processTime;
+	}
+
+	public int getProcessTime() {
+		return processTime;
+	}
+
+	public float getExperience() {
+		return experience;
 	}
 
 	@Override
@@ -77,8 +90,8 @@ public class SmeltineryRecipe implements Recipe<Container> {
 			NonNullList<Ingredient> materials = NonNullList.create();
 
 			JsonArray jsonMaterials = GsonHelper.getAsJsonArray(json, "materials");
-			for(int i = 0; i < jsonMaterials.size(); ++i) {
-				Ingredient ingredient = Ingredient.fromJson(jsonMaterials.get(i), false);
+			for (int i = 0; i < jsonMaterials.size(); ++i) {
+				Ingredient ingredient = IngredientUtils.ingredientFromJson(jsonMaterials.get(i));
 				materials.add(ingredient);
 			}
 
@@ -87,10 +100,13 @@ public class SmeltineryRecipe implements Recipe<Container> {
 			else if (materials.size() > SmeltineryBlockEntity.MAX_MATERIALS)
 				throw new JsonParseException("Too many materials for smeltinery recipe. The maximum is " + SmeltineryBlockEntity.MAX_MATERIALS);
 
-			Ingredient metal = Ingredient.fromJson(GsonHelper.getAsJsonObject(json, "metal"));
+			Ingredient metal = Ingredient.fromJson(GsonHelper.getAsJsonObject(json, "metal"), false);
 			ItemStack result = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(json, "result"));
 
-			return new SmeltineryRecipe(recipeId, materials, metal, result);
+			float exp = GsonHelper.getAsFloat(json, "experience", 0.0f);
+			int processTime = GsonHelper.getAsInt(json, "process_time", 800);
+
+			return new SmeltineryRecipe(recipeId, materials, metal, result, exp, processTime);
 		}
 
 		@Override
@@ -103,8 +119,10 @@ public class SmeltineryRecipe implements Recipe<Container> {
 
 			Ingredient metal = Ingredient.fromNetwork(buffer);
 			ItemStack result = buffer.readItem();
+			float exp = buffer.readFloat();
+			int processTime = buffer.readInt();
 
-			return new SmeltineryRecipe(recipeId, materials, metal, result);
+			return new SmeltineryRecipe(recipeId, materials, metal, result, exp, processTime);
 		}
 
 		@Override
@@ -116,6 +134,9 @@ public class SmeltineryRecipe implements Recipe<Container> {
 
 			recipe.metal.toNetwork(buffer);
 			buffer.writeItem(recipe.getResultItem(null));
+
+			buffer.writeFloat(recipe.experience);
+			buffer.writeInt(recipe.processTime);
 		}
 	}
 }

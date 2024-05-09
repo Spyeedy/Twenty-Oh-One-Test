@@ -8,6 +8,8 @@ architectury {
 }
 
 loom {
+    accessWidenerPath = project(":common").loom.accessWidenerPath
+
     runConfigs.configureEach {
         if (name == "client") {
             runDir = "../common/run"
@@ -21,6 +23,9 @@ loom {
     }
 
     forge {
+        convertAccessWideners = true
+        extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
+
         dataGen {
             mod "spytoo"
         }
