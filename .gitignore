@@ -25,3 +25,5 @@ common/run/*
 common/.architectury-transformer/*
 forge/.architectury-transformer/*
 fabric/.architectury-transformer/*
+
+**/.cache/*

@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=east,lit=false": {
+      "model": "spytoo:block/smeltinery",
+      "y": 90
+    },
+    "facing=east,lit=true": {
+      "model": "spytoo:block/smeltinery",
+      "y": 90
+    },
+    "facing=north,lit=false": {
+      "model": "spytoo:block/smeltinery"
+    },
+    "facing=north,lit=true": {
+      "model": "spytoo:block/smeltinery"
+    },
+    "facing=south,lit=false": {
+      "model": "spytoo:block/smeltinery",
+      "y": 180
+    },
+    "facing=south,lit=true": {
+      "model": "spytoo:block/smeltinery",
+      "y": 180
+    },
+    "facing=west,lit=false": {
+      "model": "spytoo:block/smeltinery",
+      "y": 270
+    },
+    "facing=west,lit=true": {
+      "model": "spytoo:block/smeltinery",
+      "y": 270
+    }
+  }
+}
