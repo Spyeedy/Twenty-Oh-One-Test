@@ -30,10 +30,8 @@ public class SmeltineryContainer extends AbstractContainerMenu {
 		this.playerInv = playerInv;
 		this.container = container;
 
-		int blockSlotIdx = 0;
-
 		// Water slot
-		this.addSlot(new Slot(container, blockSlotIdx++, 8, 60) {
+		this.addSlot(new Slot(container, SmeltineryBlockEntity.SLOT_FLUID, 8, 60) {
 			@Override
 			public boolean mayPlace(ItemStack stack) {
 				return stack.getItem() == Items.WATER_BUCKET;
@@ -41,7 +39,7 @@ public class SmeltineryContainer extends AbstractContainerMenu {
 		});
 
 		// Fuel Slot
-		this.addSlot(new Slot(container, blockSlotIdx++, 84, 60) {
+		this.addSlot(new Slot(container, SmeltineryBlockEntity.SLOT_FUEL, 84, 60) {
 			@Override
 			public boolean mayPlace(ItemStack stack) {
 				return stack.getItem() == Items.COAL || stack.getItem() == Items.CHARCOAL;
@@ -49,17 +47,17 @@ public class SmeltineryContainer extends AbstractContainerMenu {
 		});
 
 		// Metal Slot
-		this.addSlot(new Slot(container, blockSlotIdx++, 84, 19));
+		this.addSlot(new Slot(container, SmeltineryBlockEntity.SLOT_METAL, 84, 19));
 
 		// Materials Slot
 		for (int y = 0; y < 2; y++) {
 			for (int x = 0; x < 2; x++) {
-				this.addSlot(new Slot(container, blockSlotIdx++, 35 + x * 18, 10 + y * 18));
+				this.addSlot(new Slot(container, SmeltineryBlockEntity.SLOT_MATERIAL_START + x + y * 2, 35 + x * 18, 10 + y * 18));
 			}
 		}
 
 		// Result Slot
-		this.addSlot(new Slot(container, blockSlotIdx, 144, 19) {
+		this.addSlot(new Slot(container, SmeltineryBlockEntity.SLOT_RESULT, 144, 19) {
 			@Override
 			public boolean mayPlace(ItemStack stack) {
 				return false;

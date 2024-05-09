@@ -20,6 +20,13 @@ import spyeedy.mods.spytwenohone.container.SmeltineryContainer;
 public class SmeltineryBlockEntity extends BlockEntity implements Container, MenuProvider {
 	public static final int SLOTS = 8;
 
+	public static final int SLOT_FLUID = 0;
+	public static final int SLOT_FUEL = 1;
+	public static final int SLOT_METAL = 2;
+	public static final int SLOT_MATERIAL_START = 3;
+	public static final int SLOT_RESULT = SLOTS - 1;
+	public static final int MAX_MATERIALS = SLOT_RESULT - SLOT_MATERIAL_START;
+
 	private NonNullList<ItemStack> inventory = NonNullList.withSize(SLOTS, ItemStack.EMPTY);
 
 	public SmeltineryBlockEntity(BlockPos pos, BlockState blockState) {
