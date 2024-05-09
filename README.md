@@ -1,0 +1,3 @@
+# Spyeedy's Twenty Oh One Test
+A mod meant to explore Minecraft 1.20.1 modding as the name implies "Twenty Oh One", as well as learn how to develop a mod for multiple mod loaders. In this case, Fabric and Forge.  
+The mod uses [Architectury](https://docs.architectury.dev/plugin/get_started) to leverage their capabilities to develop and build a mod that can run on multiple mod loaders of your choosing.
