@@ -36,16 +36,24 @@ public class SmeltineryContainer extends AbstractContainerMenu {
 		this.container = container;
 		this.containerData = containerData;
 
-		// Water slot
-		this.addSlot(new Slot(container, SmeltineryBlockEntity.SLOT_FLUID, 8, 60) {
+		// Fluid input slot
+		this.addSlot(new Slot(container, SmeltineryBlockEntity.SLOT_FLUID_INPUT, 8, 10) {
 			@Override
 			public boolean mayPlace(ItemStack stack) {
 				return stack.getItem() == Items.WATER_BUCKET;
 			}
 		});
 
+		// Fluid output slot
+		this.addSlot(new Slot(container, SmeltineryBlockEntity.SLOT_FLUID_OUTPUT, 8, 85) {
+			@Override
+			public boolean mayPlace(ItemStack stack) {
+				return stack.getItem() == Items.BUCKET;
+			}
+		});
+
 		// Fuel Slot
-		this.addSlot(new Slot(container, SmeltineryBlockEntity.SLOT_FUEL, 84, 60) {
+		this.addSlot(new Slot(container, SmeltineryBlockEntity.SLOT_FUEL, 80, 93) {
 			@Override
 			public boolean mayPlace(ItemStack stack) {
 				return SmeltineryBlockEntity.isFuel(stack);
@@ -53,17 +61,15 @@ public class SmeltineryContainer extends AbstractContainerMenu {
 		});
 
 		// Metal Slot
-		this.addSlot(new Slot(container, SmeltineryBlockEntity.SLOT_METAL, 84, 19));
+		this.addSlot(new Slot(container, SmeltineryBlockEntity.SLOT_METAL, 80, 49));
 
 		// Materials Slot
-		for (int y = 0; y < 2; y++) {
-			for (int x = 0; x < 2; x++) {
-				this.addSlot(new Slot(container, SmeltineryBlockEntity.SLOT_MATERIAL_START + x + y * 2, 35 + x * 18, 10 + y * 18));
-			}
+		for (int y = 0; y < 4; y++) {
+			this.addSlot(new Slot(container, SmeltineryBlockEntity.SLOT_MATERIAL_START + y, 35, 22 + y * 18));
 		}
 
 		// Result Slot
-		this.addSlot(new Slot(container, SmeltineryBlockEntity.SLOT_RESULT, 144, 19) {
+		this.addSlot(new Slot(container, SmeltineryBlockEntity.SLOT_RESULT, 144, 49) {
 			@Override
 			public boolean mayPlace(ItemStack stack) {
 				return false;
@@ -72,12 +78,12 @@ public class SmeltineryContainer extends AbstractContainerMenu {
 
 		for (int y = 0; y < 3; y++) {
 			for (int x = 0; x < 9; x++) {
-				this.addSlot(new Slot(playerInv, x + y * 9 + 9, 8 + x * 18, 84 + y * 18));
+				this.addSlot(new Slot(playerInv, x + y * 9 + 9, 8 + x * 18, 117 + y * 18));
 			}
 		}
 
 		for(int x = 0; x < 9; ++x) {
-			this.addSlot(new Slot(playerInv, x, 8 + x * 18, 142));
+			this.addSlot(new Slot(playerInv, x, 8 + x * 18, 175));
 		}
 
 		this.addDataSlots(containerData);
@@ -136,5 +142,9 @@ public class SmeltineryContainer extends AbstractContainerMenu {
 
 	public boolean isLit() {
 		return this.containerData.get(SmeltineryBlockEntity.DataValues.LIT_TIME.ordinal()) > 0;
+	}
+
+	public int getFluidAmount() {
+		return this.containerData.get(SmeltineryBlockEntity.DataValues.FLUID_AMOUNT.ordinal());
 	}
 }

@@ -1,4 +1,4 @@
-package spyeedy.mods.spytwenohone.client.screen;
+package spyeedy.mods.spytwenohone.client.gui.screen;
 
 import dev.latvian.mods.rhino.util.HideFromJS;
 import net.minecraft.client.gui.screens.Screen;

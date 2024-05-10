@@ -26,29 +26,33 @@ import spyeedy.mods.spytwenohone.recipe.SmeltineryRecipe;
 import spyeedy.mods.spytwenohone.recipe.SpyTooRecipes;
 
 public class SmeltineryBlockEntity extends BlockEntity implements Container, MenuProvider {
-	public static final int SLOTS = 8;
+	public static final int SLOTS = 9;
 
-	public static final int SLOT_FLUID = 0;
-	public static final int SLOT_FUEL = 1;
-	public static final int SLOT_METAL = 2;
-	public static final int SLOT_MATERIAL_START = 3;
+	public static final int SLOT_FLUID_INPUT = 0;
+	public static final int SLOT_FLUID_OUTPUT = 1;
+	public static final int SLOT_FUEL = 2;
+	public static final int SLOT_METAL = 3;
+	public static final int SLOT_MATERIAL_START = 4;
 	public static final int SLOT_RESULT = SLOTS - 1;
 	public static final int MAX_MATERIALS = SLOT_RESULT - SLOT_MATERIAL_START;
-	public static final int DATA_COUNT = 3;
+	public static final int DATA_COUNT = 4;
 
 	public static final int MAX_LIT = 8000;
+	public static final int MAX_FLUID = 5000;
+	public static final int FLUID_PER_BUCKET = 1000;
 
 	private NonNullList<ItemStack> inventory = NonNullList.withSize(SLOTS, ItemStack.EMPTY);
 	private int litTime;
 	private int progress;
 	private int maxProgress;
+	private int fluidAmount;
 	protected final ContainerData dataAccess;
 	private final RecipeManager.CachedCheck<SmeltineryBlockEntity, SmeltineryRecipe> quickCheck;
 
 	public SmeltineryBlockEntity(BlockPos pos, BlockState blockState) {
 		super(SpyTooBlockEntities.SMELTINERY.get(), pos, blockState);
 
-		litTime = progress = 0;
+		fluidAmount = litTime = progress = 0;
 
 		quickCheck = RecipeManager.createCheck(SpyTooRecipes.SMELTINERY_RECIPE.get());
 		dataAccess = new ContainerData() {
@@ -58,6 +62,7 @@ public class SmeltineryBlockEntity extends BlockEntity implements Container, Men
 					case 0 -> progress;
 					case 1 -> maxProgress;
 					case 2 -> litTime;
+					case 3 -> fluidAmount;
 					default -> 0;
 				};
 			}
@@ -73,6 +78,9 @@ public class SmeltineryBlockEntity extends BlockEntity implements Container, Men
 						break;
 					case 2:
 						litTime = value;
+						break;
+					case 3:
+						fluidAmount = value;
 						break;
 				}
 			}
@@ -128,6 +136,29 @@ public class SmeltineryBlockEntity extends BlockEntity implements Container, Men
 			stack.setCount(this.getMaxStackSize());
 		}
 
+		switch (slot) {
+			case SLOT_FLUID_INPUT:
+				if (stack.getItem() == Items.WATER_BUCKET && fluidAmount < MAX_FLUID) {
+					this.inventory.set(slot, new ItemStack(Items.BUCKET));
+					addFluid(FLUID_PER_BUCKET, false);
+				}
+				if (!getItem(SLOT_FLUID_OUTPUT).isEmpty() && getItem(SLOT_FLUID_OUTPUT).getItem() == Items.BUCKET && fluidAmount >= FLUID_PER_BUCKET) {
+					this.inventory.set(SLOT_FLUID_OUTPUT, new ItemStack(Items.WATER_BUCKET));
+					removeFluid(FLUID_PER_BUCKET, false);
+				}
+				break;
+			case SLOT_FLUID_OUTPUT:
+				if (stack.getItem() == Items.BUCKET && fluidAmount >= FLUID_PER_BUCKET) {
+					this.inventory.set(slot, new ItemStack(Items.WATER_BUCKET));
+					removeFluid(FLUID_PER_BUCKET, false);
+				}
+				if (!getItem(SLOT_FLUID_INPUT).isEmpty() && getItem(SLOT_FLUID_INPUT).getItem() == Items.WATER_BUCKET && fluidAmount < MAX_FLUID) {
+					this.inventory.set(SLOT_FLUID_INPUT, new ItemStack(Items.BUCKET));
+					addFluid(FLUID_PER_BUCKET, false);
+				}
+				break;
+			default:
+		}
 		this.setChanged();
 	}
 
@@ -158,6 +189,7 @@ public class SmeltineryBlockEntity extends BlockEntity implements Container, Men
 		super.load(tag);
 		this.progress = tag.getShort("Progress");
 		this.litTime = tag.getShort("LitTime");
+		this.fluidAmount = tag.getShort("FluidAmt");
 		inventory = NonNullList.withSize(SLOTS, ItemStack.EMPTY);
 		ContainerHelper.loadAllItems(tag, inventory);
 	}
@@ -167,15 +199,60 @@ public class SmeltineryBlockEntity extends BlockEntity implements Container, Men
 		super.saveAdditional(tag);
 		tag.putShort("Progress", (short) this.progress);
 		tag.putShort("LitTime", (short) this.litTime);
+		tag.putShort("FluidAmt", (short) this.fluidAmount);
 		ContainerHelper.saveAllItems(tag, inventory);
 	}
 
-	public static boolean isFuel(ItemStack stack) {
-		return stack.getItem() == Items.COAL || stack.getItem() == Items.CHARCOAL;
 	}
 
 	public boolean isLit() {
 		return this.litTime > 0;
+	}
+
+	/**
+	 * @param amount Amount of fluid to add to the block
+	 * @return True if addition was successful, false if otherwise
+	 */
+	public boolean addFluid(int amount, boolean shouldContainerUpdate) {
+		if (this.fluidAmount >= MAX_FLUID) return false;
+
+		this.fluidAmount = Math.min(fluidAmount + amount, MAX_FLUID);
+
+		if (shouldContainerUpdate) {
+			this.setChanged();
+
+			if (level != null)
+				level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Block.UPDATE_ALL);
+		}
+
+		return true;
+	}
+
+	/**
+	 * @param amount Amount of fluid to remove from the block
+	 * @return True if removal was successful, false if otherwise
+	 */
+	public boolean removeFluid(int amount, boolean shouldContainerUpdate) {
+		if (this.fluidAmount <= 0) return false;
+
+		this.fluidAmount = Math.max(0, fluidAmount - amount);
+
+		if (shouldContainerUpdate) {
+			this.setChanged();
+
+			if (level != null)
+				level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Block.UPDATE_ALL);
+		}
+
+		return true;
+	}
+
+	public int getFluidAmount() {
+		return fluidAmount;
+	}
+
+	public static boolean isFuel(ItemStack stack) {
+		return stack.getItem() == Items.COAL || stack.getItem() == Items.CHARCOAL;
 	}
 
 	public static boolean canCook(RegistryAccess registryAccess, @Nullable SmeltineryRecipe recipe, SmeltineryBlockEntity blockEntity) {
@@ -274,6 +351,6 @@ public class SmeltineryBlockEntity extends BlockEntity implements Container, Men
 	}
 
 	public enum DataValues {
-		PROGRESS, MAX_PROGRESS, LIT_TIME;
+		PROGRESS, MAX_PROGRESS, LIT_TIME, FLUID_AMOUNT
 	}
 }

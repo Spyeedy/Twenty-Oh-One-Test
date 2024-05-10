@@ -1,3 +1,4 @@
 {
-  "block.spytoo.smeltinery": "Smeltinery"
+	"block.spytoo.smeltinery": "Smeltinery",
+	"gui.spytoo.smeltinery.fluid_level": "%d/%d"
 }

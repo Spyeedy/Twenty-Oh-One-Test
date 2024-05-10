@@ -7,7 +7,7 @@ import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import org.jetbrains.annotations.Nullable;
 import spyeedy.mods.spytwenohone.SpyTwentyOhOne;
-import spyeedy.mods.spytwenohone.client.screen.ScriptableScreenImpl;
+import spyeedy.mods.spytwenohone.client.gui.screen.ScriptableScreenImpl;
 import spyeedy.mods.spytwenohone.kubejs.SpyTooJSEvents;
 import spyeedy.mods.spytwenohone.kubejs.RegisterScreenEventJS;
 

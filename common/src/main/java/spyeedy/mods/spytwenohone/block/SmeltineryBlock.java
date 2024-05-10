@@ -5,8 +5,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
@@ -49,18 +50,26 @@ public class SmeltineryBlock extends BaseEntityBlock {
 		if (!level.isClientSide) {
 			BlockEntity blockEntity = level.getBlockEntity(pos);
 			if (blockEntity instanceof SmeltineryBlockEntity) {
+				ItemStack heldStack = player.getItemInHand(hand);
 				SmeltineryBlockEntity be = (SmeltineryBlockEntity) blockEntity;
-				if (player.isCrouching()) {
-					/*Optional<SmeltineryRecipe> recipeMatch = level.getRecipeManager().getRecipeFor(SpyTooRecipes.SMELTINERY_RECIPE.get(), be, level);
-					if (recipeMatch.isPresent()) {
-						player.sendSystemMessage(Component.literal("Recipe matched!"));
-						return InteractionResult.SUCCESS;
-					}*/
-				} else {
-					player.openMenu((MenuProvider) blockEntity);
-					SpyTwentyOhOne.LOGGER.info("Success opening!");
-					return InteractionResult.SUCCESS;
+				Direction blockFacing = state.getValue(FACING);
+
+				if ((heldStack.getItem() == Items.BUCKET || heldStack.getItem() == Items.WATER_BUCKET) && (hit.getDirection() == blockFacing.getCounterClockWise() || hit.getDirection() == blockFacing.getClockWise() || hit.getDirection() == blockFacing.getOpposite())) {
+					if (heldStack.getItem() == Items.WATER_BUCKET && be.addFluid(SmeltineryBlockEntity.FLUID_PER_BUCKET, true)) {
+						if (!player.isCreative()) {
+							player.setItemInHand(hand, new ItemStack(Items.BUCKET));
+						}
+						return InteractionResult.CONSUME;
+					} else if (heldStack.getItem() == Items.BUCKET && be.removeFluid(SmeltineryBlockEntity.FLUID_PER_BUCKET, true)) {
+						if (!player.isCreative()) {
+							player.setItemInHand(hand, new ItemStack(Items.WATER_BUCKET));
+						}
+						return InteractionResult.CONSUME;
+					}
 				}
+				player.openMenu(be);
+				SpyTwentyOhOne.LOGGER.info("Success opening!");
+				return InteractionResult.SUCCESS;
 			}
 			return InteractionResult.FAIL;
 		} else {

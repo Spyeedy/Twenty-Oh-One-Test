@@ -1,4 +1,4 @@
-package spyeedy.mods.spytwenohone.client.screen;
+package spyeedy.mods.spytwenohone.client.gui.screen;
 
 public interface ScriptableScreen {
 	void closeScreen();
