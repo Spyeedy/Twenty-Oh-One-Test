@@ -11,5 +11,6 @@ public final class SpyTwentyOhOneFabricClient implements ClientModInitializer {
 
 		SpyTwentyOhOneClient.registerRenderTypes();
 		SpyTwentyOhOneClient.registerMenuScreens();
+		SpyTwentyOhOneClient.registerEntityRenderers();
 	}
 }

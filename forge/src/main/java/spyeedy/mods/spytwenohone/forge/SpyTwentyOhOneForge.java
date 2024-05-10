@@ -36,6 +36,7 @@ public class SpyTwentyOhOneForge {
 			event.enqueueWork(() -> {
 				SpyTwentyOhOneClient.registerMenuScreens();
 				SpyTwentyOhOneClient.registerRenderTypes();
+				SpyTwentyOhOneClient.registerEntityRenderers();
 			});
 		}
 	}

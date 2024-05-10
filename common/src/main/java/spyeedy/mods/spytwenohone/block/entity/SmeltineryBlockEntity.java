@@ -5,6 +5,9 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
@@ -17,6 +20,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
@@ -136,30 +140,39 @@ public class SmeltineryBlockEntity extends BlockEntity implements Container, Men
 			stack.setCount(this.getMaxStackSize());
 		}
 
+		boolean shouldBlockUpdate = false;
+
 		switch (slot) {
 			case SLOT_FLUID_INPUT:
 				if (stack.getItem() == Items.WATER_BUCKET && fluidAmount < MAX_FLUID) {
+					shouldBlockUpdate = true;
 					this.inventory.set(slot, new ItemStack(Items.BUCKET));
 					addFluid(FLUID_PER_BUCKET, false);
 				}
 				if (!getItem(SLOT_FLUID_OUTPUT).isEmpty() && getItem(SLOT_FLUID_OUTPUT).getItem() == Items.BUCKET && fluidAmount >= FLUID_PER_BUCKET) {
+					shouldBlockUpdate = true;
 					this.inventory.set(SLOT_FLUID_OUTPUT, new ItemStack(Items.WATER_BUCKET));
 					removeFluid(FLUID_PER_BUCKET, false);
 				}
 				break;
 			case SLOT_FLUID_OUTPUT:
 				if (stack.getItem() == Items.BUCKET && fluidAmount >= FLUID_PER_BUCKET) {
+					shouldBlockUpdate = true;
 					this.inventory.set(slot, new ItemStack(Items.WATER_BUCKET));
 					removeFluid(FLUID_PER_BUCKET, false);
 				}
 				if (!getItem(SLOT_FLUID_INPUT).isEmpty() && getItem(SLOT_FLUID_INPUT).getItem() == Items.WATER_BUCKET && fluidAmount < MAX_FLUID) {
+					shouldBlockUpdate = true;
 					this.inventory.set(SLOT_FLUID_INPUT, new ItemStack(Items.BUCKET));
 					addFluid(FLUID_PER_BUCKET, false);
 				}
 				break;
 			default:
 		}
+
 		this.setChanged();
+		if (shouldBlockUpdate)
+			level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Block.UPDATE_ALL);
 	}
 
 	@Override
@@ -194,15 +207,30 @@ public class SmeltineryBlockEntity extends BlockEntity implements Container, Men
 		ContainerHelper.loadAllItems(tag, inventory);
 	}
 
+	private void saveDataForUpdateTag(CompoundTag tag) {
+		tag.putShort("FluidAmt", (short) this.fluidAmount);
+	}
+
 	@Override
 	protected void saveAdditional(CompoundTag tag) {
 		super.saveAdditional(tag);
 		tag.putShort("Progress", (short) this.progress);
 		tag.putShort("LitTime", (short) this.litTime);
-		tag.putShort("FluidAmt", (short) this.fluidAmount);
+		saveDataForUpdateTag(tag);
 		ContainerHelper.saveAllItems(tag, inventory);
 	}
 
+	@Override
+	public CompoundTag getUpdateTag() {
+		CompoundTag compoundTag = new CompoundTag();
+		saveDataForUpdateTag(compoundTag);
+		return compoundTag;
+	}
+
+	@Nullable
+	@Override
+	public Packet<ClientGamePacketListener> getUpdatePacket() {
+		return ClientboundBlockEntityDataPacket.create(this);
 	}
 
 	public boolean isLit() {
