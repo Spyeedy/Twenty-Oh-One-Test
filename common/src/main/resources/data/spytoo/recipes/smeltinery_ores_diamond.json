@@ -5,16 +5,15 @@
 			"item": "minecraft:iron_ingot"
 		},
 		{
-			"tag": "spytoo:purified_stone_materials",
-			"count": 2
+			"tag": "spytoo:stone_materials"
 		}
 	],
 	"metal": {
-		"item": "minecraft:diamond"
+		"tag": "minecraft:diamond_ores"
 	},
 	"result": {
 		"item": "minecraft:diamond",
-		"count": 2
+		"count": 3
 	},
-	"process_time": 1800
+	"process_time": 2400
 }

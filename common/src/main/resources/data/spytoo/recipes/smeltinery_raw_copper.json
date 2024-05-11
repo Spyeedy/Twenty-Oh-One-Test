@@ -1,0 +1,16 @@
+{
+	"type": "spytoo:smeltinery",
+	"materials": [
+		{
+			"tag": "spytoo:purified_stone_materials"
+		}
+	],
+	"metal": {
+		"item": "minecraft:raw_copper"
+	},
+	"result": {
+		"item": "minecraft:copper_ingot",
+		"count": 3
+	},
+	"process_time": 800
+}

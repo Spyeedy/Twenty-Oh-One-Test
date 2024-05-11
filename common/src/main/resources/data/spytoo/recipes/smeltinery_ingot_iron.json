@@ -2,19 +2,16 @@
 	"type": "spytoo:smeltinery",
 	"materials": [
 		{
-			"item": "minecraft:iron_ingot"
-		},
-		{
 			"tag": "spytoo:purified_stone_materials",
 			"count": 2
 		}
 	],
 	"metal": {
-		"item": "minecraft:diamond"
+		"item": "minecraft:iron_ingot"
 	},
 	"result": {
-		"item": "minecraft:diamond",
+		"item": "minecraft:iron_ingot",
 		"count": 2
 	},
-	"process_time": 1800
+	"process_time": 600
 }
