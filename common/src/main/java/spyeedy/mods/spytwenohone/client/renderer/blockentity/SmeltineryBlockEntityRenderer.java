@@ -41,7 +41,7 @@ public class SmeltineryBlockEntityRenderer implements BlockEntityRenderer<Smelti
 		}
 
 		poseStack.pushPose();
-		poseStack.translate(0.5, 0.0, 0.5);
+		poseStack.translate(0.5, 0.0, 0.5); // shift origin to center of the block before rotation, this ensures the translation doesn't get fucked up!
 		poseStack.mulPose(Axis.YP.rotationDegrees(rotation));
 
 		// Note that for pos coordinates, they can be multiplied against 16 to get integer value in terms of coordinate placement in the block model json.
@@ -71,7 +71,7 @@ public class SmeltineryBlockEntityRenderer implements BlockEntityRenderer<Smelti
 
 			// Actual fluid rendering, face is drawn CCW starting from bottom-right corner. 2/16 = 0.125
 			poseStack.pushPose();
-			poseStack.translate(-0.5f, 0.25f, -0.5f);
+			poseStack.translate(-0.5f, 0.25f, -0.5f); // shift origin back to North-West corner
 			var matrix4f = poseStack.last().pose();
 			var matrix3f = poseStack.last().normal();
 			// South face

@@ -22,16 +22,16 @@ public class SmeltineryRecipe implements Recipe<SmeltineryBlockEntity> {
 	private final ItemStack result;
 	private final float experience;
 	private final int processTime;
-	private final int fluidUseRate;
+	private final int fluidConsumption;
 
-	public SmeltineryRecipe(ResourceLocation id, NonNullList<Ingredient> materials, Ingredient metal, ItemStack result, float experience, int processTime, int fluidUseRate) {
+	public SmeltineryRecipe(ResourceLocation id, NonNullList<Ingredient> materials, Ingredient metal, ItemStack result, float experience, int processTime, int fluidConsumption) {
 		this.id = id;
 		this.materials = materials;
 		this.metal = metal;
 		this.result = result;
 		this.experience = experience;
 		this.processTime = processTime;
-		this.fluidUseRate = fluidUseRate;
+		this.fluidConsumption = fluidConsumption;
 	}
 
 	public int getProcessTime() {
@@ -40,6 +40,10 @@ public class SmeltineryRecipe implements Recipe<SmeltineryBlockEntity> {
 
 	public float getExperience() {
 		return experience;
+	}
+
+	public int getFluidConsumption() {
+		return fluidConsumption;
 	}
 
 	@Override
@@ -128,7 +132,7 @@ public class SmeltineryRecipe implements Recipe<SmeltineryBlockEntity> {
 
 			float exp = GsonHelper.getAsFloat(json, "experience", 0.0f);
 			int processTime = GsonHelper.getAsInt(json, "process_time", 800);
-			int fluidUseRate = GsonHelper.getAsInt(json, "fluid_use_rate", 100);
+			int fluidUseRate = GsonHelper.getAsInt(json, "fluid_consumption", 500);
 
 			return new SmeltineryRecipe(recipeId, materials, metal, result, exp, processTime, fluidUseRate);
 		}
@@ -162,7 +166,7 @@ public class SmeltineryRecipe implements Recipe<SmeltineryBlockEntity> {
 
 			buffer.writeFloat(recipe.experience);
 			buffer.writeInt(recipe.processTime);
-			buffer.writeInt(recipe.fluidUseRate);
+			buffer.writeInt(recipe.fluidConsumption);
 		}
 	}
 }

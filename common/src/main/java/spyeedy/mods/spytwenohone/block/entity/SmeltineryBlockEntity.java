@@ -279,12 +279,22 @@ public class SmeltineryBlockEntity extends BlockEntity implements Container, Men
 		return fluidAmount;
 	}
 
+	/**
+	 * Consume progress if it's supposed to "idle". Idle conditions is left to the caller to decide
+	 */
+	public void idleConsumption() {
+		progress = Mth.clamp(progress - 2, 0, progress);
+		if (progress == 0) {
+			maxProgress = 0;
+		}
+	}
+
 	public static boolean isFuel(ItemStack stack) {
 		return stack.getItem() == Items.COAL || stack.getItem() == Items.CHARCOAL;
 	}
 
 	public static boolean canCook(RegistryAccess registryAccess, @Nullable SmeltineryRecipe recipe, SmeltineryBlockEntity blockEntity) {
-		if (recipe != null && !blockEntity.isRecipeSlotsEmpty()) {
+		if (recipe != null && blockEntity.fluidAmount >= recipe.getFluidConsumption() && !blockEntity.isRecipeSlotsEmpty()) {
 			ItemStack resultStack = recipe.getResultItem(registryAccess);
 			if (resultStack.isEmpty())
 				return false;
@@ -324,6 +334,8 @@ public class SmeltineryBlockEntity extends BlockEntity implements Container, Men
 	public static void serverTick(Level level, BlockPos pos, BlockState state, SmeltineryBlockEntity blockEntity) {
 		boolean oldIsLit = blockEntity.isLit();
 		boolean shouldUpdate = false;
+		boolean shouldClientUpdate = false;
+
 		if (oldIsLit) {
 			--blockEntity.litTime;
 		}
@@ -331,7 +343,6 @@ public class SmeltineryBlockEntity extends BlockEntity implements Container, Men
 		ItemStack fuelStack = blockEntity.inventory.get(SLOT_FUEL);
 		// if it's lit or if not lit must have fuel & the recipe items
 		if (blockEntity.isLit() || !fuelStack.isEmpty() && !blockEntity.isRecipeSlotsEmpty()) {
-
 			SmeltineryRecipe recipe = null;
 			if (!blockEntity.isRecipeSlotsEmpty()) {
 				recipe = blockEntity.quickCheck.getRecipeFor(blockEntity, level).orElse(null);
@@ -354,6 +365,9 @@ public class SmeltineryBlockEntity extends BlockEntity implements Container, Men
 						shouldUpdate = true;
 						blockEntity.progress = 0;
 						consumeItems(level.registryAccess(), recipe, blockEntity);
+
+						blockEntity.removeFluid(recipe.getFluidConsumption(), false);
+						shouldClientUpdate = true;
 					}
 				}
 			} else {
@@ -361,10 +375,7 @@ public class SmeltineryBlockEntity extends BlockEntity implements Container, Men
 				blockEntity.maxProgress = 0;
 			}
 		} else if (!blockEntity.isLit() && blockEntity.progress > 0) {
-			blockEntity.progress = Mth.clamp(blockEntity.progress - 2, 0, blockEntity.progress);
-			if (blockEntity.progress == 0) {
-				blockEntity.maxProgress = 0;
-			}
+			blockEntity.idleConsumption();
 		}
 
 		// if the old lit state doesn't match current lit state, we set the blockstate!
@@ -376,6 +387,8 @@ public class SmeltineryBlockEntity extends BlockEntity implements Container, Men
 
 		if (shouldUpdate)
 			setChanged(level, pos, state);
+		if (shouldClientUpdate)
+			level.sendBlockUpdated(pos, state, state, Block.UPDATE_ALL);
 	}
 
 	public enum DataValues {

@@ -52,7 +52,7 @@ public class SmeltineryInvScreen extends AbstractContainerScreen<SmeltineryConta
 		}
 
 		// Progress
-		guiGraphics.blit(GUI_TEX, i + 109, j + 48, imageWidth, 14, menu.getProgress() + 1, 17);
+		guiGraphics.blit(GUI_TEX, i + 108, j + 48, imageWidth, 14, menu.getProgress() + 1, 17);
 
 		// Fluid
 		if (this.menu.getFluidAmount() > 0) {
