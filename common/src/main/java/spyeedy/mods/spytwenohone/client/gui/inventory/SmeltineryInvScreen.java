@@ -4,6 +4,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.InventoryMenu;
 import spyeedy.mods.spytwenohone.SpyTwentyOhOne;
@@ -14,6 +15,13 @@ import spyeedy.mods.spytwenohone.util.RenderUtils;
 public class SmeltineryInvScreen extends AbstractContainerScreen<SmeltineryContainer> {
 
 	static final ResourceLocation GUI_TEX = new ResourceLocation(SpyTwentyOhOne.MOD_ID, "textures/gui/smeltinery.png");
+	static int PROGRESS_LENGTH = 4; // how much do the bars span: outline + core
+	static int PROGRESS_MAT_V_LENGTH = 11;
+	static int PROGRESS_MAT_H_LENGTH = 41;
+	static int PROGRESS_METAL_V_LENGTH = 34;
+	static int PROGRESS_CONVERGE_LENGTH = 4;
+	static int PROGRESS_COMBINED_H_LENGTH = 60;
+	static int PROGRESS_COMBINED_V_LENGTH = 34;
 
 	public SmeltineryInvScreen(SmeltineryContainer menu, Inventory playerInventory, Component title) {
 		super(menu, playerInventory, title);
@@ -42,17 +50,14 @@ public class SmeltineryInvScreen extends AbstractContainerScreen<SmeltineryConta
 
 		// Metal slot icon
 		if (!this.menu.getSlot(SmeltineryBlockEntity.SLOT_METAL).hasItem()) {
-			guiGraphics.blit(GUI_TEX, i + 80, j + 49, imageWidth, 31, 16, 16);
+			guiGraphics.blit(GUI_TEX, i + 80, j + 49, imageWidth, 14, 16, 16);
 		}
 
 		// Lit state
 		if (this.menu.isLit()) {
 			int litProg = menu.getLitProgress();
-			guiGraphics.blit(GUI_TEX, i + 80, j + 88 - litProg, imageWidth, 12 - litProg, 14, litProg + 1);
+			guiGraphics.blit(GUI_TEX, i + 80, j + 89 - litProg, imageWidth, 12 - litProg, 14, litProg + 1);
 		}
-
-		// Progress
-		guiGraphics.blit(GUI_TEX, i + 108, j + 48, imageWidth, 14, menu.getProgress() + 1, 17);
 
 		// Fluid
 		if (this.menu.getFluidAmount() > 0) {
@@ -62,7 +67,68 @@ public class SmeltineryInvScreen extends AbstractContainerScreen<SmeltineryConta
 			RenderUtils.renderGuiFluid(guiGraphics, this.minecraft.getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(RenderUtils.FLUID_STILL), i + 8, j + 31 + maxHeight - fluidHeight, 0, 16, fluidHeight, RenderUtils.COLOR_WATER_FLUID);
 		}
 
-		// Fluid Label
-		guiGraphics.blit(GUI_TEX, i + 7, j + 30, imageWidth, 47, 18, 51);
+		// Fluid markings
+		guiGraphics.blit(GUI_TEX, i + 7, j + 30, imageWidth, 30, 18, 51);
+
+		// Progress
+		{
+			int prog_int = this.menu.getProgress();
+			float progress = Mth.clamp(prog_int / (float)this.menu.getMaxProgress(), 0.0f, 1.0f);
+
+			float mat_metal_percent = 0.4f;
+			float converge_percent = 0.1f;
+			float remainder_percent = 1.0f - mat_metal_percent - converge_percent;
+
+			if (prog_int > 0) {
+				int blitX = i + 41;
+				int blitXOffset = 0;
+
+				// Draw Materials & Metal progress
+				{
+					float progress_mat_metal = Mth.clamp(progress / mat_metal_percent, 0.0f, 1.0f); // make progress in range of 0.0f to 1.0f with respect to mat_metal_percent
+					float progress_mat = progress_mat_metal * (PROGRESS_MAT_H_LENGTH + PROGRESS_MAT_V_LENGTH); // convert the progress into length with respect to materials' total length
+					float progress_metal = progress_mat_metal * PROGRESS_METAL_V_LENGTH; // convert the progress into length with respect to metal length
+
+					// material vertical
+					int mat_v = Mth.clamp((int)progress_mat, 0, PROGRESS_MAT_V_LENGTH);
+					guiGraphics.blit(GUI_TEX, blitX, j + 10 + PROGRESS_MAT_V_LENGTH - mat_v, blitXOffset, imageHeight + PROGRESS_MAT_V_LENGTH - mat_v, PROGRESS_LENGTH, mat_v);
+
+					// material horizontal
+					blitX += PROGRESS_LENGTH;
+					blitXOffset += PROGRESS_LENGTH;
+					int mat_h = Mth.clamp((int)progress_mat - PROGRESS_MAT_V_LENGTH, 0, PROGRESS_MAT_H_LENGTH);
+					guiGraphics.blit(GUI_TEX, blitX, j + 10, blitXOffset, imageHeight, mat_h, PROGRESS_LENGTH);
+
+					// vertical metal
+					blitX += PROGRESS_MAT_H_LENGTH;
+					blitXOffset += PROGRESS_MAT_H_LENGTH;
+					int metal_v = Mth.clamp((int)progress_metal, 0, PROGRESS_METAL_V_LENGTH);
+					guiGraphics.blit(GUI_TEX, blitX, j + 14 + PROGRESS_METAL_V_LENGTH - metal_v, blitXOffset, imageHeight + PROGRESS_LENGTH + PROGRESS_METAL_V_LENGTH - metal_v, PROGRESS_LENGTH, metal_v);
+				}
+				// Draw Converge progress, it's a horizontal bar
+				if (progress >= mat_metal_percent) {
+					float progress_converge = Mth.clamp((progress - mat_metal_percent) / converge_percent, 0.0f, 1.0f); // make progress in range of 0.0f to 1.0f with respect to converge_percent
+					int converge_unit = (int)(progress_converge * PROGRESS_CONVERGE_LENGTH);
+					guiGraphics.blit(GUI_TEX, blitX, j + 10, blitXOffset, imageHeight, converge_unit, PROGRESS_LENGTH);
+				}
+				// Draw remainder progress
+				if (progress >= (mat_metal_percent + converge_percent)) {
+					float progress_combined_decimal = Mth.clamp((progress - mat_metal_percent - converge_percent)/remainder_percent, 0.0f, 1.0f); // make progress in range of 0.0f to 1.0f with respect to remainder_percent
+					float progress_combined = progress_combined_decimal * (PROGRESS_COMBINED_H_LENGTH + PROGRESS_COMBINED_V_LENGTH); // convert the progress into length with respect to combined's total length
+
+					// combined horizontal
+					int comb_h = Mth.clamp((int)progress_combined, 0, PROGRESS_COMBINED_H_LENGTH);
+					blitX += PROGRESS_CONVERGE_LENGTH;
+					blitXOffset += PROGRESS_CONVERGE_LENGTH;
+					guiGraphics.blit(GUI_TEX, blitX, j + 10, blitXOffset, imageHeight, comb_h, PROGRESS_LENGTH);
+
+					// combined vertical
+					int comb_v = Mth.clamp((int)progress_combined - PROGRESS_COMBINED_H_LENGTH, 0, PROGRESS_COMBINED_V_LENGTH);
+					blitX += PROGRESS_COMBINED_H_LENGTH;
+					blitXOffset += PROGRESS_COMBINED_H_LENGTH;
+					guiGraphics.blit(GUI_TEX, blitX, j + 10, blitXOffset, imageHeight, PROGRESS_LENGTH, comb_v); // combined vertical progress
+				}
+			}
+		}
 	}
 }

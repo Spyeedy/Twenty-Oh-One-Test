@@ -73,7 +73,7 @@ public class SmeltineryRecipe implements Recipe<SmeltineryBlockEntity> {
 			IngredientUtils.shrinkStack(metal, container.getItem(SmeltineryBlockEntity.SLOT_METAL));
 
 			int matIdx = 0;
-			for (int slotIdx = SmeltineryBlockEntity.SLOT_MATERIAL_START; slotIdx < SmeltineryBlockEntity.SLOT_RESULT; slotIdx++) {
+			for (int slotIdx = SmeltineryBlockEntity.SLOT_MATERIAL_START; slotIdx < SmeltineryBlockEntity.SLOT_RESULT && matIdx < materials.size(); slotIdx++) {
 				ItemStack slotItem = container.getItem(slotIdx);
 				if (!slotItem.isEmpty()) {
 					Ingredient matIngredient = materials.get(matIdx++);
@@ -127,6 +127,7 @@ public class SmeltineryRecipe implements Recipe<SmeltineryBlockEntity> {
 			else if (materials.size() > SmeltineryBlockEntity.MAX_MATERIALS)
 				throw new JsonParseException("Too many materials for smeltinery recipe. The maximum is " + SmeltineryBlockEntity.MAX_MATERIALS);
 
+			// Normal ingredient...
 			Ingredient metal = Ingredient.fromJson(GsonHelper.getAsJsonObject(json, "metal"), false);
 			ItemStack result = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(json, "result"));
 

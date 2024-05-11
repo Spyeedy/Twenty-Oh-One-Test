@@ -53,7 +53,7 @@ public class SmeltineryContainer extends AbstractContainerMenu {
 		});
 
 		// Fuel Slot
-		this.addSlot(new Slot(container, SmeltineryBlockEntity.SLOT_FUEL, 80, 93) {
+		this.addSlot(new Slot(container, SmeltineryBlockEntity.SLOT_FUEL, 80, 94) {
 			@Override
 			public boolean mayPlace(ItemStack stack) {
 				return SmeltineryBlockEntity.isFuel(stack);
@@ -78,12 +78,12 @@ public class SmeltineryContainer extends AbstractContainerMenu {
 
 		for (int y = 0; y < 3; y++) {
 			for (int x = 0; x < 9; x++) {
-				this.addSlot(new Slot(playerInv, x + y * 9 + 9, 8 + x * 18, 117 + y * 18));
+				this.addSlot(new Slot(playerInv, x + y * 9 + 9, 8 + x * 18, 118 + y * 18));
 			}
 		}
 
 		for(int x = 0; x < 9; ++x) {
-			this.addSlot(new Slot(playerInv, x, 8 + x * 18, 175));
+			this.addSlot(new Slot(playerInv, x, 8 + x * 18, 176));
 		}
 
 		this.addDataSlots(containerData);
@@ -130,6 +130,14 @@ public class SmeltineryContainer extends AbstractContainerMenu {
 	}
 
 	public int getProgress() {
+		return this.containerData.get(SmeltineryBlockEntity.DataValues.PROGRESS.ordinal());
+	}
+
+	public int getMaxProgress() {
+		return this.containerData.get(SmeltineryBlockEntity.DataValues.MAX_PROGRESS.ordinal());
+	}
+
+	public int getProgressPercent() {
 		int i = this.containerData.get(SmeltineryBlockEntity.DataValues.PROGRESS.ordinal());
 		int j = this.containerData.get(SmeltineryBlockEntity.DataValues.MAX_PROGRESS.ordinal());
 
