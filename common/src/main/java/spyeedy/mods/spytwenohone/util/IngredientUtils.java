@@ -1,6 +1,9 @@
 package spyeedy.mods.spytwenohone.util;
 
+import com.google.common.collect.Lists;
 import com.google.gson.*;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -10,10 +13,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 public class IngredientUtils {
+	// Allow "count" in an ingredient JSON
 	public static Ingredient ingredientFromJson(JsonElement jsonElement) {
 		if (jsonElement != null && !jsonElement.isJsonNull()) {
 			if (jsonElement.isJsonObject()) {
@@ -40,8 +47,14 @@ public class IngredientUtils {
 			return new Ingredient.ItemValue(ShapedRecipe.itemStackFromJson(json));
 		} else if (json.has("tag")) {
 			ResourceLocation resourceLocation = new ResourceLocation(GsonHelper.getAsString(json, "tag"));
-			TagKey<Item> tagKey = TagKey.create(Registries.ITEM, resourceLocation);
-			return new Ingredient.TagValue(tagKey);
+			int count = GsonHelper.getAsInt(json, "count", 1);
+
+			if (count < 1) {
+				throw new JsonSyntaxException("Invalid output count: " + count);
+			} else {
+				TagKey<Item> tagKey = TagKey.create(Registries.ITEM, resourceLocation);
+				return new TagCountValue(tagKey, count);
+			}
 		} else {
 			throw new JsonParseException("An ingredient entry needs either a tag or an item");
 		}
@@ -76,6 +89,39 @@ public class IngredientUtils {
 				stack.shrink(itemStack.getCount());
 				break;
 			}
+		}
+	}
+
+	public static class TagCountValue extends Ingredient.TagValue {
+		private final int count;
+
+		public TagCountValue(TagKey<Item> tag, int count) {
+			super(tag);
+			this.count = count;
+		}
+
+		public int getCount() {
+			return count;
+		}
+
+		@Override
+		public Collection<ItemStack> getItems() {
+			List<ItemStack> list = Lists.newArrayList();
+			Iterator var2 = BuiltInRegistries.ITEM.getTagOrEmpty(this.tag).iterator();
+
+			while(var2.hasNext()) {
+				Holder<Item> holder = (Holder)var2.next();
+				list.add(new ItemStack(holder, count));
+			}
+
+			return list;
+		}
+
+		@Override
+		public JsonObject serialize() {
+			JsonObject json = super.serialize();
+			json.addProperty("count", count);
+			return json;
 		}
 	}
 }
