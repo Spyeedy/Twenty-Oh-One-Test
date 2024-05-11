@@ -13,6 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -90,6 +91,10 @@ public class IngredientUtils {
 				break;
 			}
 		}
+	}
+
+	public static Ingredient ofValues(Ingredient.Value... values) {
+		return Ingredient.fromValues(Arrays.stream(values));
 	}
 
 	public static class TagCountValue extends Ingredient.TagValue {

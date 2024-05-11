@@ -1,16 +1,18 @@
 {
-	"type": "spytoo:smeltinery",
-	"materials": [
-		{
-			"tag": "spytoo:purified_stone_materials"
-		}
-	],
-	"metal": {
-		"item": "minecraft:raw_copper"
-	},
-	"result": {
-		"item": "minecraft:copper_ingot",
-		"count": 3
-	},
-	"process_time": 800
+  "type": "spytoo:smeltinery",
+  "experience": 0.0,
+  "fluid_consumption": 500,
+  "materials": [
+    {
+      "tag": "spytoo:purified_stone_materials"
+    }
+  ],
+  "metal": {
+    "item": "minecraft:raw_copper"
+  },
+  "process_time": 800,
+  "result": {
+    "count": 3,
+    "item": "minecraft:copper_ingot"
+  }
 }

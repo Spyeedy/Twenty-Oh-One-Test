@@ -27,3 +27,4 @@ forge/.architectury-transformer/*
 fabric/.architectury-transformer/*
 
 **/.cache/*
+**/generated/*

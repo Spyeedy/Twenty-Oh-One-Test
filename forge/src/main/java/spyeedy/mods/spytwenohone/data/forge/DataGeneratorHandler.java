@@ -13,5 +13,7 @@ public class DataGeneratorHandler {
 		dataGen.addProvider(e.includeClient(), new SpyTooBlockStateProvider(dataGen.getPackOutput(), e.getExistingFileHelper()));
 		dataGen.addProvider(e.includeClient(), new SpyTooItemModelProvider(dataGen.getPackOutput(), e.getExistingFileHelper()));
 		dataGen.addProvider(e.includeClient(), new SpyTooLangProvider(dataGen.getPackOutput()));
+
+		dataGen.addProvider(e.includeServer(), new SpyTooRecipeProvider(dataGen.getPackOutput()));
 	}
 }

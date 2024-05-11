@@ -4,15 +4,15 @@
   "fluid_consumption": 500,
   "materials": [
     {
-      "tag": "spytoo:purified_stone_materials"
+      "tag": "spytoo:stone_materials"
     }
   ],
   "metal": {
-    "item": "minecraft:raw_iron"
+    "tag": "minecraft:copper_ores"
   },
-  "process_time": 800,
+  "process_time": 1200,
   "result": {
     "count": 3,
-    "item": "minecraft:iron_ingot"
+    "item": "minecraft:copper_ingot"
   }
 }
