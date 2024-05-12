@@ -9,7 +9,7 @@ version = "${version}"
 displayName = "Spyeedy's Twenty Oh One Test"
 authors = "Spyeedy"
 description = '''
-This is an example description! Tell everyone what your mod is about!
+Spyeedy's test mod to explore modding in 1.20.1
 '''
 #logoFile = ""
 

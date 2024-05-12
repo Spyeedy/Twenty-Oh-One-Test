@@ -3,13 +3,13 @@
   "id": "${mod_id}",
   "version": "${version}",
   "name": "Spyeedy's Twenty Oh One Test",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "description": "Spyeedy's test mod to explore modding in 1.20.1",
   "authors": [
     "Spyeedy"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "homepage": "",
+    "sources": ""
   },
   "license": "CC0-1.0",
   "icon": "assets/${mod_id}/icon.png",
