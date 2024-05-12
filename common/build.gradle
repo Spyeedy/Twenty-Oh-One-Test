@@ -20,4 +20,7 @@ dependencies {
 
     // WTHIT
     modCompileOnly "mcp.mobius.waila:wthit-api:fabric-${rootProject.wthit_version}"
+
+    // JEI
+    modCompileOnly "mezz.jei:jei-${rootProject.minecraft_version}-common-api:${rootProject.jei_version}"
 }

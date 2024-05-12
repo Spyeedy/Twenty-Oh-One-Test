@@ -1,34 +1,37 @@
 {
-  "schemaVersion": 1,
-  "id": "${mod_id}",
-  "version": "${version}",
-  "name": "Spyeedy's Twenty Oh One Test",
-  "description": "Spyeedy's test mod to explore modding in 1.20.1",
-  "authors": [
-    "Spyeedy"
-  ],
-  "contact": {
-    "homepage": "",
-    "sources": ""
-  },
-  "license": "CC0-1.0",
-  "icon": "assets/${mod_id}/icon.png",
-  "environment": "*",
-  "entrypoints": {
-    "main": [
-      "spyeedy.mods.spytwenohone.fabric.SpyTwentyOhOneFabric"
-    ],
-    "client": [
-      "spyeedy.mods.spytwenohone.fabric.client.SpyTwentyOhOneFabricClient"
-    ]
-  },
-  "mixins": [
-    "${mod_id}.mixins.json",
-    "${mod_id}-common.mixins.json"
-  ],
-  "depends": {
-    "fabric": "",
-    "minecraft": "~1.20.1",
-    "java": ">=17"
-  }
+	"schemaVersion": 1,
+	"id": "${mod_id}",
+	"version": "${version}",
+	"name": "Spyeedy's Twenty Oh One Test",
+	"description": "Spyeedy's test mod to explore modding in 1.20.1",
+	"authors": [
+		"Spyeedy"
+	],
+	"contact": {
+		"homepage": "",
+		"sources": ""
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/${mod_id}/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"spyeedy.mods.spytwenohone.fabric.SpyTwentyOhOneFabric"
+		],
+		"client": [
+			"spyeedy.mods.spytwenohone.fabric.client.SpyTwentyOhOneFabricClient"
+		],
+		"jei_mod_plugin": [
+			"spyeedy.mods.spytwenohone.compat.jei.SpyTooJeiPlugin"
+		]
+	},
+	"mixins": [
+		"${mod_id}.mixins.json",
+		"${mod_id}-common.mixins.json"
+	],
+	"depends": {
+		"fabric": "",
+		"minecraft": "~1.20.1",
+		"java": ">=17"
+	}
 }

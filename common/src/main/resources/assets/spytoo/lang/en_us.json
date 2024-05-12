@@ -1,4 +1,5 @@
 {
   "block.spytoo.smeltinery": "Smeltinery",
-  "gui.spytoo.smeltinery.fluid_level": "%d/%d"
+  "gui.spytoo.smeltinery.fluid_level": "%d/%d mB",
+  "jei.spytoo.smeltinery.title": "Smeltinery"
 }

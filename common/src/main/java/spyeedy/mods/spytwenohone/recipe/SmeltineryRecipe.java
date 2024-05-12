@@ -34,6 +34,14 @@ public class SmeltineryRecipe implements Recipe<SmeltineryBlockEntity> {
 		this.fluidConsumption = fluidConsumption;
 	}
 
+	public NonNullList<Ingredient> getMaterials() {
+		return materials;
+	}
+
+	public Ingredient getMetal() {
+		return metal;
+	}
+
 	public int getProcessTime() {
 		return processTime;
 	}

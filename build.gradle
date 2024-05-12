@@ -20,7 +20,7 @@ subprojects {
 
     base {
         // Set up a suffixed format for the mod jar names, e.g. `example-fabric`.
-        archivesName = "$rootProject.archives_name-$project.name"
+        archivesName = "$rootProject.archives_name-$rootProject.minecraft_version-$project.name"
     }
 
     repositories {
@@ -44,12 +44,26 @@ subprojects {
                 includeGroup "dev.latvian.mods"
             }
         }
+
+        // for WTHIT
         maven {
             url "https://maven2.bai.lol"
             content {
                 includeGroup "lol.bai"
                 includeGroup "mcp.mobius.waila"
             }
+        }
+
+        // for JEI
+        maven {
+            // location of the maven that hosts JEI files since January 2023
+            name = "Jared's maven"
+            url = "https://maven.blamejared.com/"
+        }
+        maven {
+            // location of a maven mirror for JEI files, as a fallback
+            name = "ModMaven"
+            url = "https://modmaven.dev"
         }
     }
 

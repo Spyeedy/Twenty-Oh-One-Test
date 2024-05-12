@@ -15,6 +15,7 @@ public class SpyTooLangProvider extends LanguageProvider {
 	protected void addTranslations() {
 		this.addBlock(SpyTooBlocks.SMELT_FINERY, "Smeltinery");
 
-		this.add("gui.spytoo.smeltinery.fluid_level", "%d/%d");
+		this.add("gui.spytoo.smeltinery.fluid_level", "%d/%d mB");
+		this.add("jei.spytoo.smeltinery.title", "Smeltinery");
 	}
 }
