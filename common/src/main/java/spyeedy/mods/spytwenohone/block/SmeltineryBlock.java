@@ -33,7 +33,7 @@ public class SmeltineryBlock extends BaseEntityBlock {
 	public static final BooleanProperty LIT = BlockStateProperties.LIT;
 
 	public SmeltineryBlock() {
-		super(Properties.of().noOcclusion().lightLevel(state -> state.getValue(LIT) ? 15 : 0));
+		super(Properties.of().mapColor(MapColor.METAL).requiresCorrectToolForDrops().strength(3.5f).noOcclusion().lightLevel(state -> state.getValue(LIT) ? 15 : 0));
 		registerDefaultState(this.getStateDefinition().any()
 				.setValue(FACING, Direction.NORTH)
 				.setValue(LIT, false)

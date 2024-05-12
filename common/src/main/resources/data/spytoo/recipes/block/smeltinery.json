@@ -1,0 +1,30 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "misc",
+	"show_notification": true,
+	"pattern": [
+		"III",
+		"CFC",
+		"GHG"
+	],
+	"key": {
+		"I": {
+			"item": "minecraft:iron_ingot"
+		},
+		"F": {
+			"item": "minecraft:furnace"
+		},
+		"C": {
+			"item": "minecraft:copper_block"
+		},
+		"G": {
+			"item": "minecraft:glass"
+		},
+		"H": {
+			"item": "minecraft:bucket"
+		}
+	},
+	"result": {
+		"item": "spytoo:smeltinery"
+	}
+}
