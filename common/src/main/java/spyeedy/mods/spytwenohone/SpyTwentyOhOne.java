@@ -16,6 +16,7 @@ public final class SpyTwentyOhOne {
 	public static void init() {
 		SpyTooBlocks.BLOCKS.submit();
 		SpyTooItems.ITEMS.submit();
+		SpyTooItems.addCreativeTabs();
 		SpyTooBlockEntities.BLOCK_ENTITY_TYPES.submit();
 
 		SpyTooContainers.MENU_TYPES.submit();
