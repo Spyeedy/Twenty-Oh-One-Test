@@ -279,6 +279,19 @@ public class SmeltineryBlockEntity extends BlockEntity implements Container, Men
 		return fluidAmount;
 	}
 
+	public int getProgress() {
+		return progress;
+	}
+
+	public int getMaxProgress() {
+		return maxProgress;
+	}
+
+	@Nullable
+	public SmeltineryRecipe getRecipe() {
+		return isRecipeSlotsEmpty() ? null : quickCheck.getRecipeFor(this, level).orElse(null);
+	}
+
 	/**
 	 * Consume progress if it's supposed to "idle". Idle conditions is left to the caller to decide
 	 */

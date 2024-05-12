@@ -50,6 +50,10 @@ dependencies {
     // KubeJS
     modImplementation "dev.latvian.mods:kubejs-fabric:$rootProject.kubejs_version"
 
+    // WTHIT
+    modRuntimeOnly "mcp.mobius.waila:wthit:fabric-${rootProject.wthit_version}"
+    modRuntimeOnly "lol.bai:badpackets:fabric-${rootProject.badpackets_version}"
+
     common(project(path: ':common', configuration: 'namedElements')) { transitive false }
     shadowBundle project(path: ':common', configuration: 'transformProductionFabric')
 }

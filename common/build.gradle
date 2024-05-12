@@ -17,4 +17,7 @@ dependencies {
 
     // KubeJS
     modCompileOnly "dev.latvian.mods:kubejs-fabric:$rootProject.kubejs_version"
+
+    // WTHIT
+    modCompileOnly "mcp.mobius.waila:wthit-api:fabric-${rootProject.wthit_version}"
 }

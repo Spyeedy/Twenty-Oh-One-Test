@@ -1,0 +1,6 @@
+{
+	"spytoo:plugin": {
+		"initializer": "spyeedy.mods.spytwenohone.compat.wthit.SpyTooWailaPlugin",
+		"side": "*"
+	}
+}
