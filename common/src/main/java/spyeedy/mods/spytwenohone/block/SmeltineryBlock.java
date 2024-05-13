@@ -77,6 +77,7 @@ public class SmeltineryBlock extends BaseEntityBlock {
 	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
 		if (!level.isClientSide) {
 			BlockEntity blockEntity = level.getBlockEntity(pos);
+
 			if (blockEntity instanceof SmeltineryBlockEntity) {
 				ItemStack heldStack = player.getItemInHand(hand);
 				SmeltineryBlockEntity be = (SmeltineryBlockEntity) blockEntity;
@@ -85,12 +86,13 @@ public class SmeltineryBlock extends BaseEntityBlock {
 				if ((heldStack.getItem() == Items.BUCKET || heldStack.getItem() == Items.WATER_BUCKET) && (hit.getDirection() == blockFacing.getCounterClockWise() || hit.getDirection() == blockFacing.getClockWise() || hit.getDirection() == blockFacing.getOpposite())) {
 					if (heldStack.getItem() == Items.WATER_BUCKET && be.addFluid(SmeltineryBlockEntity.FLUID_PER_BUCKET, true)) {
 						if (!player.isCreative()) {
-							player.setItemInHand(hand, new ItemStack(Items.BUCKET));
+							player.setItemInHand(hand, Items.BUCKET.getDefaultInstance());
 						}
 						return InteractionResult.CONSUME;
 					} else if (heldStack.getItem() == Items.BUCKET && be.removeFluid(SmeltineryBlockEntity.FLUID_PER_BUCKET, true)) {
 						if (!player.isCreative()) {
-							player.setItemInHand(hand, new ItemStack(Items.WATER_BUCKET));
+							heldStack.shrink(1);
+							player.addItem(Items.WATER_BUCKET.getDefaultInstance());
 						}
 						return InteractionResult.CONSUME;
 					}
