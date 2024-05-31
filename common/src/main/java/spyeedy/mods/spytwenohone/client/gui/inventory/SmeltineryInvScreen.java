@@ -37,6 +37,9 @@ public class SmeltineryInvScreen extends AbstractContainerScreen<SmeltineryConta
 		if (mouseX >= (leftPos + 8) && mouseX < (leftPos + 24) && mouseY >= (topPos + 31) && mouseY < (topPos + 80)) {
 			guiGraphics.renderTooltip(this.font, Component.translatable("gui.spytoo.smeltinery.fluid_level", this.menu.getFluidAmount(), SmeltineryBlockEntity.MAX_FLUID), mouseX, mouseY);
 		}
+
+		if (mouseX >= (leftPos + 114) && mouseX < (leftPos + 160) && mouseY >= (topPos + 98) && mouseY < (topPos + 106))
+		guiGraphics.renderTooltip(this.font, Component.translatable("gui.spytoo.smeltinery.energy", this.menu.getEnergy(), SmeltineryBlockEntity.MAX_ENERGY), mouseX, mouseY);
 	}
 
 	@Override
@@ -50,13 +53,13 @@ public class SmeltineryInvScreen extends AbstractContainerScreen<SmeltineryConta
 
 		// Metal slot icon
 		if (!this.menu.getSlot(SmeltineryBlockEntity.SLOT_METAL).hasItem()) {
-			guiGraphics.blit(GUI_TEX, i + 80, j + 49, imageWidth, 14, 16, 16);
+			guiGraphics.blit(GUI_TEX, i + 80, j + 49, imageWidth, 16, 16, 16);
 		}
 
-		// Lit state
-		if (this.menu.isLit()) {
-			int litProg = menu.getLitProgress();
-			guiGraphics.blit(GUI_TEX, i + 80, j + 89 - litProg, imageWidth, 12 - litProg, 14, litProg + 1);
+		// Energy
+		if (this.menu.getEnergy() > 0) {
+			int energyBar = (int) ((menu.getEnergy() / (float) SmeltineryBlockEntity.MAX_ENERGY) * 46);
+			guiGraphics.blit(GUI_TEX, i + 114, j + 98, imageWidth, 83, energyBar, 8);
 		}
 
 		// Fluid
@@ -68,7 +71,7 @@ public class SmeltineryInvScreen extends AbstractContainerScreen<SmeltineryConta
 		}
 
 		// Fluid markings
-		guiGraphics.blit(GUI_TEX, i + 7, j + 30, imageWidth, 30, 18, 51);
+		guiGraphics.blit(GUI_TEX, i + 7, j + 30, imageWidth, 32, 18, 51);
 
 		// Progress
 		{

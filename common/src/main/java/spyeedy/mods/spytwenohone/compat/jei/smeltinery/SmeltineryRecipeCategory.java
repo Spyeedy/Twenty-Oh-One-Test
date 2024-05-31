@@ -47,7 +47,7 @@ public class SmeltineryRecipeCategory extends AbstractFlameCategory<SmeltineryRe
 		var guiHelper = registration.getJeiHelpers().getGuiHelper();
 		this.background = guiHelper.createDrawable(GUI_TEX, 0, 0, GUI_WIDTH, GUI_HEIGHT);
 		this.icon = guiHelper.createDrawableItemStack(SpyTooItems.SMELT_FINERY.get().getDefaultInstance());
-		this.fluidMarkings = guiHelper.createDrawable(GUI_TEX, 141, 14, 18, 51);
+		this.fluidMarkings = guiHelper.createDrawable(GUI_TEX, GUI_WIDTH, 0, 18, 51);
 		this.waterSprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(RenderUtils.FLUID_STILL);
 
 		this.staticArrow = guiHelper.createDrawable(GUI_TEX, GUI_WIDTH + 18, 0, 24, 17);
@@ -98,6 +98,11 @@ public class SmeltineryRecipeCategory extends AbstractFlameCategory<SmeltineryRe
 		Minecraft minecraft = Minecraft.getInstance();
 		Font font = minecraft.font;
 
+		guiGraphics.blit(GUI_TEX, 74, 52, GUI_WIDTH + 18, 17, (int) ((recipe.getEnergyRequired() / (float) SmeltineryBlockEntity.MAX_ENERGY) * 46), 8);
+		if (mouseX >= 74 && mouseX < 120 && mouseY >= 52 && mouseY < 60) {
+			guiGraphics.renderTooltip(font, Component.translatable("gui.spytoo.smeltinery.energy", recipe.getEnergyRequired(), SmeltineryBlockEntity.MAX_ENERGY), (int) mouseX, (int) mouseY);
+		}
+
 		if (recipe.getFluidConsumption() > 0) {
 			int maxHeight = 49;
 			int fluidHeight = (int)(recipe.getFluidConsumption() / (float) SmeltineryBlockEntity.MAX_FLUID * maxHeight);
@@ -109,7 +114,7 @@ public class SmeltineryRecipeCategory extends AbstractFlameCategory<SmeltineryRe
 			guiGraphics.renderTooltip(font, Component.translatable("gui.spytoo.smeltinery.fluid_level", recipe.getFluidConsumption(), SmeltineryBlockEntity.MAX_FLUID), (int) mouseX, (int) mouseY);
 		}
 
-		animatedFlame.draw(guiGraphics, 60, 38);
+//		animatedFlame.draw(guiGraphics, 60, 38);
 
 		int cookTime = recipe.getProcessTime();
 		if (cookTime > 0) {

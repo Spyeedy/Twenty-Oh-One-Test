@@ -42,6 +42,11 @@ public class SmeltineryContainer extends AbstractContainerMenu {
 			public boolean mayPlace(ItemStack stack) {
 				return stack.getItem() == Items.WATER_BUCKET;
 			}
+
+			@Override
+			public int getMaxStackSize() {
+				return 1;
+			}
 		});
 
 		// Fluid output slot
@@ -50,10 +55,15 @@ public class SmeltineryContainer extends AbstractContainerMenu {
 			public boolean mayPlace(ItemStack stack) {
 				return stack.getItem() == Items.BUCKET;
 			}
+
+			@Override
+			public int getMaxStackSize() {
+				return 1;
+			}
 		});
 
 		// Fuel Slot
-		this.addSlot(new Slot(container, SmeltineryBlockEntity.SLOT_FUEL, 80, 94) {
+		this.addSlot(new Slot(container, SmeltineryBlockEntity.SLOT_FUEL, 62, 94) {
 			@Override
 			public boolean mayPlace(ItemStack stack) {
 				return SmeltineryBlockEntity.isFuel(stack);
@@ -129,27 +139,16 @@ public class SmeltineryContainer extends AbstractContainerMenu {
 		return this.container.stillValid(player);
 	}
 
+	public int getEnergy() {
+		return this.containerData.get(SmeltineryBlockEntity.DataValues.ENERGY.ordinal());
+	}
+
 	public int getProgress() {
 		return this.containerData.get(SmeltineryBlockEntity.DataValues.PROGRESS.ordinal());
 	}
 
 	public int getMaxProgress() {
 		return this.containerData.get(SmeltineryBlockEntity.DataValues.MAX_PROGRESS.ordinal());
-	}
-
-	public int getProgressPercent() {
-		int i = this.containerData.get(SmeltineryBlockEntity.DataValues.PROGRESS.ordinal());
-		int j = this.containerData.get(SmeltineryBlockEntity.DataValues.MAX_PROGRESS.ordinal());
-
-		return j > 0 && i > 0 ? i * 24 / j : 0;
-	}
-
-	public int getLitProgress() {
-		return this.containerData.get(SmeltineryBlockEntity.DataValues.LIT_TIME.ordinal()) * 13 / SmeltineryBlockEntity.MAX_LIT;
-	}
-
-	public boolean isLit() {
-		return this.containerData.get(SmeltineryBlockEntity.DataValues.LIT_TIME.ordinal()) > 0;
 	}
 
 	public int getFluidAmount() {

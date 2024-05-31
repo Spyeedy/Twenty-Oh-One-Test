@@ -35,9 +35,9 @@ public class SpyTooRecipeProvider extends RecipeProvider implements IConditionBu
 		smeltineryRawMetal("iron", writer, Items.RAW_IRON, Items.IRON_INGOT);
 		
 		SmeltineryRecipeBuilder.create(Ingredient.of(Items.IRON_INGOT), Ingredient.of(Items.DIAMOND), new ItemStack(Items.DIAMOND, 2)).addMaterial(IngredientUtils.ofValues(new IngredientUtils.TagCountValue(SpyTooItemTags.PURIFIED_STONE_MATERIALS, 2))).setProcessTime(1200).save(writer, new ResourceLocation(SpyTwentyOhOne.MOD_ID, "smeltinery_diamond"));
-		smeltineryIngot("ingot_copper", writer, Items.COPPER_INGOT);
-		smeltineryIngot("ingot_gold", writer, Items.GOLD_INGOT);
-		smeltineryIngot("ingot_iron", writer, Items.IRON_INGOT);
+		smeltineryIngot("copper", writer, Items.COPPER_INGOT);
+		smeltineryIngot("gold", writer, Items.GOLD_INGOT);
+		smeltineryIngot("iron", writer, Items.IRON_INGOT);
 	}
 	
 	private static void smeltineryOre(String metalName, Consumer<FinishedRecipe> writer, TagKey<Item> tagOres, Item metal) {

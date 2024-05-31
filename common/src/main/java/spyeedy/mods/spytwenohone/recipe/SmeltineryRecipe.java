@@ -21,17 +21,19 @@ public class SmeltineryRecipe implements Recipe<SmeltineryBlockEntity> {
 	private final Ingredient metal;
 	private final ItemStack result;
 	private final float experience;
-	private final int processTime;
+	private final int energyRequired;
 	private final int fluidConsumption;
+	private final int processTime;
 
-	public SmeltineryRecipe(ResourceLocation id, NonNullList<Ingredient> materials, Ingredient metal, ItemStack result, float experience, int processTime, int fluidConsumption) {
+	public SmeltineryRecipe(ResourceLocation id, NonNullList<Ingredient> materials, Ingredient metal, ItemStack result, float experience, int energyRequired, int fluidConsumption, int processTime) {
 		this.id = id;
 		this.materials = materials;
 		this.metal = metal;
 		this.result = result;
 		this.experience = experience;
-		this.processTime = processTime;
+		this.energyRequired = 500;
 		this.fluidConsumption = fluidConsumption;
+		this.processTime = processTime;
 	}
 
 	public NonNullList<Ingredient> getMaterials() {
@@ -42,12 +44,16 @@ public class SmeltineryRecipe implements Recipe<SmeltineryBlockEntity> {
 		return metal;
 	}
 
-	public int getProcessTime() {
-		return processTime;
-	}
-
 	public float getExperience() {
 		return experience;
+	}
+
+	public int getEnergyRequired() {
+		return energyRequired;
+	}
+
+	public int getProcessTime() {
+		return processTime;
 	}
 
 	public int getFluidConsumption() {
@@ -56,7 +62,7 @@ public class SmeltineryRecipe implements Recipe<SmeltineryBlockEntity> {
 
 	@Override
 	public boolean matches(SmeltineryBlockEntity container, Level level) {
-		if (!metal.test(container.getItem(SmeltineryBlockEntity.SLOT_METAL))) return false;
+		if (!metal.test(container.getItem(SmeltineryBlockEntity.SLOT_METAL)) || container.getFluidAmount() < this.fluidConsumption) return false;
 
 		int matIdx = 0;
 		for (int slotIdx = SmeltineryBlockEntity.SLOT_MATERIAL_START; slotIdx < SmeltineryBlockEntity.SLOT_RESULT && matIdx < materials.size(); slotIdx++) {
@@ -86,7 +92,10 @@ public class SmeltineryRecipe implements Recipe<SmeltineryBlockEntity> {
 				if (!slotItem.isEmpty()) {
 					Ingredient matIngredient = materials.get(matIdx++);
 					if (IngredientUtils.testStackDetails(matIngredient, slotItem)) {
-						IngredientUtils.shrinkStack(matIngredient, slotItem);
+						if (slotItem.getCount() == 1 && slotItem.getItem().hasCraftingRemainingItem())
+							container.setItem(slotIdx, slotItem.getItem().getCraftingRemainingItem().getDefaultInstance());
+						else
+							IngredientUtils.shrinkStack(matIngredient, slotItem);
 					}
 				}
 			}
@@ -140,10 +149,11 @@ public class SmeltineryRecipe implements Recipe<SmeltineryBlockEntity> {
 			ItemStack result = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(json, "result"));
 
 			float exp = GsonHelper.getAsFloat(json, "experience", 0.0f);
-			int processTime = GsonHelper.getAsInt(json, "process_time", 800);
+			int energy = GsonHelper.getAsInt(json, "energy", 100);
 			int fluidUseRate = GsonHelper.getAsInt(json, "fluid_consumption", 500);
+			int processTime = GsonHelper.getAsInt(json, "process_time", 800);
 
-			return new SmeltineryRecipe(recipeId, materials, metal, result, exp, processTime, fluidUseRate);
+			return new SmeltineryRecipe(recipeId, materials, metal, result, exp, energy, fluidUseRate, processTime);
 		}
 
 		@Override
@@ -157,10 +167,11 @@ public class SmeltineryRecipe implements Recipe<SmeltineryBlockEntity> {
 			Ingredient metal = Ingredient.fromNetwork(buffer);
 			ItemStack result = buffer.readItem();
 			float exp = buffer.readFloat();
-			int processTime = buffer.readInt();
+			int energy = buffer.readInt();
 			int fluidUseRate = buffer.readInt();
+			int processTime = buffer.readInt();
 
-			return new SmeltineryRecipe(recipeId, materials, metal, result, exp, processTime, fluidUseRate);
+			return new SmeltineryRecipe(recipeId, materials, metal, result, exp, energy, fluidUseRate, processTime);
 		}
 
 		@Override
@@ -174,8 +185,9 @@ public class SmeltineryRecipe implements Recipe<SmeltineryBlockEntity> {
 			buffer.writeItem(recipe.getResultItem(null));
 
 			buffer.writeFloat(recipe.experience);
-			buffer.writeInt(recipe.processTime);
+			buffer.writeInt(recipe.energyRequired);
 			buffer.writeInt(recipe.fluidConsumption);
+			buffer.writeInt(recipe.processTime);
 		}
 	}
 }
