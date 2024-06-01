@@ -31,7 +31,7 @@ public class SmeltineryRecipe implements Recipe<SmeltineryBlockEntity> {
 		this.metal = metal;
 		this.result = result;
 		this.experience = experience;
-		this.energyRequired = 500;
+		this.energyRequired = energyRequired;
 		this.fluidConsumption = fluidConsumption;
 		this.processTime = processTime;
 	}

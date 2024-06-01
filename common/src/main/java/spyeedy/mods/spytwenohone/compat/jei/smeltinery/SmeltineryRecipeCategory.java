@@ -11,6 +11,7 @@ import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
+import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -27,7 +28,7 @@ import spyeedy.mods.spytwenohone.item.SpyTooItems;
 import spyeedy.mods.spytwenohone.recipe.SmeltineryRecipe;
 import spyeedy.mods.spytwenohone.util.RenderUtils;
 
-public class SmeltineryRecipeCategory extends AbstractFlameCategory<SmeltineryRecipe> {
+public class SmeltineryRecipeCategory implements IRecipeCategory<SmeltineryRecipe> {
 
 	public static final RecipeType<SmeltineryRecipe> RECIPE_TYPE = RecipeType.create(SpyTwentyOhOne.MOD_ID, "smeltinery_recipe", SmeltineryRecipe.class);
 	private static final ResourceLocation GUI_TEX = new ResourceLocation(SpyTwentyOhOne.MOD_ID, "textures/gui/jei/smeltinery.png");
@@ -43,7 +44,6 @@ public class SmeltineryRecipeCategory extends AbstractFlameCategory<SmeltineryRe
 	private final LoadingCache<Integer, IDrawableAnimated> cachedArrows;
 
 	public SmeltineryRecipeCategory(IRecipeCategoryRegistration registration) {
-		super(registration.getJeiHelpers().getGuiHelper(), GUI_TEX, GUI_WIDTH, 0, 14, 14);
 		var guiHelper = registration.getJeiHelpers().getGuiHelper();
 		this.background = guiHelper.createDrawable(GUI_TEX, 0, 0, GUI_WIDTH, GUI_HEIGHT);
 		this.icon = guiHelper.createDrawableItemStack(SpyTooItems.SMELT_FINERY.get().getDefaultInstance());
