@@ -9,7 +9,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import spyeedy.mods.spytwenohone.SpyTwentyOhOne;
 import spyeedy.mods.spytwenohone.SpyTwentyOhOneClient;
 import spyeedy.mods.spytwenohone.network.SpyTooNetwork;
-import spyeedy.mods.spytwenohone.util.Platform;
+import spyeedy.mods.spytwenohone.platform.Platform;
 
 @Mod(SpyTwentyOhOne.MOD_ID)
 public class SpyTwentyOhOneForge {

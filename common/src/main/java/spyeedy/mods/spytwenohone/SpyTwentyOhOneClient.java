@@ -17,7 +17,7 @@ import spyeedy.mods.spytwenohone.registry.ReloadListenerRegistry;
 import spyeedy.mods.spytwenohone.registry.client.BlockEntityRendererRegistry;
 import spyeedy.mods.spytwenohone.registry.client.RenderTypeRegistry;
 import spyeedy.mods.spytwenohone.util.ModIdRefs;
-import spyeedy.mods.spytwenohone.util.Platform;
+import spyeedy.mods.spytwenohone.platform.Platform;
 
 public class SpyTwentyOhOneClient {
 	public static void init() {

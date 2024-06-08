@@ -1,4 +1,4 @@
-package spyeedy.mods.spytwenohone.util.fabric;
+package spyeedy.mods.spytwenohone.platform.fabric;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;

@@ -1,4 +1,4 @@
-package spyeedy.mods.spytwenohone.util.forge;
+package spyeedy.mods.spytwenohone.platform.forge;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.ModList;

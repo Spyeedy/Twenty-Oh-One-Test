@@ -9,7 +9,7 @@ import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 import spyeedy.mods.spytwenohone.platform.NetworkManager;
 import spyeedy.mods.spytwenohone.platform.network.*;
-import spyeedy.mods.spytwenohone.util.Platform;
+import spyeedy.mods.spytwenohone.platform.Platform;
 
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
