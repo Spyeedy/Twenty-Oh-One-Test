@@ -2,6 +2,7 @@ package spyeedy.mods.spytwenohone.fabric;
 
 import net.fabricmc.api.ModInitializer;
 import spyeedy.mods.spytwenohone.SpyTwentyOhOne;
+import spyeedy.mods.spytwenohone.network.SpyTooNetwork;
 
 public final class SpyTwentyOhOneFabric implements ModInitializer {
 	@Override
@@ -12,5 +13,6 @@ public final class SpyTwentyOhOneFabric implements ModInitializer {
 
 		// Run our common setup.
 		SpyTwentyOhOne.init();
+		SpyTooNetwork.registerServerPackets();
 	}
 }

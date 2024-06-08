@@ -2,6 +2,7 @@ package spyeedy.mods.spytwenohone.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -29,8 +30,11 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 import spyeedy.mods.spytwenohone.SpyTwentyOhOne;
+import spyeedy.mods.spytwenohone.network.message.client.TestToServerMessage;
+import spyeedy.mods.spytwenohone.network.message.server.TestToClientMessage;
 import spyeedy.mods.spytwenohone.block.entity.SmeltineryBlockEntity;
 import spyeedy.mods.spytwenohone.block.entity.SpyTooBlockEntities;
+import spyeedy.mods.spytwenohone.network.SpyTooNetwork;
 
 public class SmeltineryBlock extends BaseEntityBlock {
 
@@ -99,10 +103,15 @@ public class SmeltineryBlock extends BaseEntityBlock {
 				}
 				player.openMenu(be);
 				SpyTwentyOhOne.LOGGER.info("Success opening!");
+
+				if (player instanceof ServerPlayer)
+					SpyTooNetwork.NETWORK.sendToClient((ServerPlayer) player, new TestToClientMessage(be.getFluidAmount()));
+
 				return InteractionResult.SUCCESS;
 			}
 			return InteractionResult.FAIL;
 		} else {
+			SpyTooNetwork.NETWORK.sendToServer(new TestToServerMessage());
 			return InteractionResult.SUCCESS;
 		}
 	}
