@@ -65,6 +65,16 @@ subprojects {
             name = "ModMaven"
             url = "https://modmaven.dev"
         }
+
+        // ThreeTAG stuff
+        maven {
+            url 'https://maven.threetag.net'
+        }
+        // Forge Config API Port
+        maven {
+            name = "Fuzs Mod Resources"
+            url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven/"
+        }
     }
 
     dependencies {
