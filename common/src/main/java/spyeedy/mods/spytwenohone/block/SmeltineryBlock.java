@@ -30,11 +30,13 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 import spyeedy.mods.spytwenohone.SpyTwentyOhOne;
+import spyeedy.mods.spytwenohone.entity.PlayerEntityExtension;
 import spyeedy.mods.spytwenohone.network.message.client.TestToServerMessage;
-import spyeedy.mods.spytwenohone.network.message.server.TestToClientMessage;
+import spyeedy.mods.spytwenohone.network.message.server.DisplayOpenCountMessage;
 import spyeedy.mods.spytwenohone.block.entity.SmeltineryBlockEntity;
 import spyeedy.mods.spytwenohone.block.entity.SpyTooBlockEntities;
 import spyeedy.mods.spytwenohone.network.SpyTooNetwork;
+import spyeedy.mods.spytwenohone.storage.entity.PlayerDataStore;
 
 public class SmeltineryBlock extends BaseEntityBlock {
 
@@ -83,8 +85,15 @@ public class SmeltineryBlock extends BaseEntityBlock {
 			BlockEntity blockEntity = level.getBlockEntity(pos);
 
 			if (blockEntity instanceof SmeltineryBlockEntity) {
-				ItemStack heldStack = player.getItemInHand(hand);
 				SmeltineryBlockEntity be = (SmeltineryBlockEntity) blockEntity;
+
+				if (player.isCrouching() && player instanceof ServerPlayer && player instanceof PlayerEntityExtension) {
+					PlayerDataStore dataStore = ((PlayerEntityExtension) player).spytoo$getDataStore();
+					SpyTooNetwork.NETWORK.sendToClient((ServerPlayer) player, new DisplayOpenCountMessage(dataStore.getOpenCount()));
+					return InteractionResult.SUCCESS;
+				}
+
+				ItemStack heldStack = player.getItemInHand(hand);
 				Direction blockFacing = state.getValue(FACING);
 
 				if ((heldStack.getItem() == Items.BUCKET || heldStack.getItem() == Items.WATER_BUCKET) && (hit.getDirection() == blockFacing.getCounterClockWise() || hit.getDirection() == blockFacing.getClockWise() || hit.getDirection() == blockFacing.getOpposite())) {
@@ -104,8 +113,10 @@ public class SmeltineryBlock extends BaseEntityBlock {
 				player.openMenu(be);
 				SpyTwentyOhOne.LOGGER.info("Success opening!");
 
-				if (player instanceof ServerPlayer)
-					SpyTooNetwork.NETWORK.sendToClient((ServerPlayer) player, new TestToClientMessage(be.getFluidAmount()));
+				if (player instanceof PlayerEntityExtension) {
+					PlayerDataStore dataStore = ((PlayerEntityExtension) player).spytoo$getDataStore();
+					dataStore.setOpenCount(dataStore.getOpenCount() + 1);
+				}
 
 				return InteractionResult.SUCCESS;
 			}
