@@ -32,6 +32,7 @@ public class SpyTooJeiPlugin implements IModPlugin {
 	@Override
 	public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
 		registration.addRecipeCatalyst(SpyTooItems.SMELT_FINERY.get().getDefaultInstance(), SmeltineryRecipeCategory.RECIPE_TYPE);
+//		registration.addRecipeCatalyst();
 	}
 
 	@Override

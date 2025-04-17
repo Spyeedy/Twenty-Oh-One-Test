@@ -3,6 +3,7 @@ package spyeedy.mods.spytwenohone.block;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -30,12 +31,12 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 import spyeedy.mods.spytwenohone.SpyTwentyOhOne;
-import spyeedy.mods.spytwenohone.entity.PlayerEntityExtension;
-import spyeedy.mods.spytwenohone.network.message.client.TestToServerMessage;
-import spyeedy.mods.spytwenohone.network.message.server.DisplayOpenCountMessage;
 import spyeedy.mods.spytwenohone.block.entity.SmeltineryBlockEntity;
 import spyeedy.mods.spytwenohone.block.entity.SpyTooBlockEntities;
+import spyeedy.mods.spytwenohone.entity.PlayerEntityExtension;
 import spyeedy.mods.spytwenohone.network.SpyTooNetwork;
+import spyeedy.mods.spytwenohone.network.message.client.TestToServerMessage;
+import spyeedy.mods.spytwenohone.network.message.server.DisplayOpenCountMessage;
 import spyeedy.mods.spytwenohone.storage.entity.PlayerDataStore;
 
 public class SmeltineryBlock extends BaseEntityBlock {
@@ -59,6 +60,7 @@ public class SmeltineryBlock extends BaseEntityBlock {
 	}
 
 	public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+	public static final BooleanProperty IS_UP = BlockStateProperties.UP;
 	public static final BooleanProperty LIT = BlockStateProperties.LIT;
 
 	public SmeltineryBlock() {
@@ -66,6 +68,7 @@ public class SmeltineryBlock extends BaseEntityBlock {
 		registerDefaultState(this.getStateDefinition().any()
 				.setValue(FACING, Direction.NORTH)
 				.setValue(LIT, false)
+				//.setValue(IS_UP, false)
 		);
 	}
 
@@ -139,6 +142,11 @@ public class SmeltineryBlock extends BaseEntityBlock {
 			}
 		}
 		super.onRemove(state, level, pos, newState, movedByPiston);
+	}
+
+	@Override
+	public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
+		super.animateTick(state, level, pos, random);
 	}
 
 	@Override

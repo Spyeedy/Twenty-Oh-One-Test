@@ -14,9 +14,7 @@ loom {
         if (name == "client") {
             runDir = "../common/run"
 
-            if(System.getenv('MC_USERNAME') && System.getenv('MC_UUID') && System.getenv('MC_ACCESS_TOKEN')) {
-                programArgs '--username', System.getenv('MC_USERNAME'), '--uuid', System.getenv('MC_UUID'), '--accessToken', System.getenv('MC_ACCESS_TOKEN')
-            }
+            programArgs '--username', 'Spyeedy', '--uuid', '7400ab2f-0980-453a-a945-0bafe6cba8cc'
         }
     }
 }
